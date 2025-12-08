@@ -1,3 +1,4 @@
+// src/contexts/SnippetContext.jsx
 import {
   createContext,
   useContext,
@@ -6,7 +7,6 @@ import {
   useCallback,
 } from "react";
 import { api } from "../auth/api";
-import useAuth from "../customHooks/useAuth";
 
 const SnippetContext = createContext();
 
@@ -17,8 +17,6 @@ export const useSnippets = () => {
 };
 
 export const SnippetsProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-
   const [filters, setFilters] = useState({
     search: "",
     page: 1,
@@ -33,15 +31,12 @@ export const SnippetsProvider = ({ children }) => {
     total: 0,
     pages: 1,
   });
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const fetchSnippets = useCallback(async () => {
-    if (!isAuthenticated) return;
     setLoading(true);
     setError("");
-
     try {
       const params = new URLSearchParams(filters);
       const res = await api.get(`/snippets?${params.toString()}`);
@@ -57,15 +52,15 @@ export const SnippetsProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [filters, isAuthenticated]);
-
-  const updateFilters = (newFilters) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-  };
+  }, [filters]);
 
   useEffect(() => {
     fetchSnippets();
   }, [fetchSnippets]);
+
+  const updateFilters = (newFilters) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
 
   const deleteSnippet = async (id) => {
     await api.delete(`/snippets/${id}`);
