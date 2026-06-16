@@ -6,10 +6,7 @@ import { FaGlobeAsia, FaLock, FaSearch, FaShareAlt } from "react-icons/fa";
 import { MdSnippetFolder } from "react-icons/md";
 import { IoMdColorPalette } from "react-icons/io";
 
-const Home = () => {
-  const navigate = useNavigate();
-
-  const sampleCode = `function debounce(func, delay) {
+const sampleCode = `function debounce(func, delay) {
   let timer;
   
   return function (...args) {
@@ -28,6 +25,9 @@ const handleSearch = debounce((event) => {
 
 document.getElementById("searchInput")
   .addEventListener("input", handleSearch);`;
+
+const Home = () => {
+  const navigate = useNavigate();
 
   const codeSnippet = () => (
     <div className="mx-auto border-2 border-[#e5e5e6] p-5 rounded-4xl bg-white w-full max-w-[600px] box-border overflow-hidden mb-4">
@@ -202,8 +202,8 @@ export const greet = (name: string) =>
   );
 
   return (
-    <section className="p-4 w-full flex flex-col gap-4 max-w-[80%] mx-auto">
-      <div className="h-[50vh] text-center flex flex-col justify-center items-center w-full">
+    <section className="p-4 w-full flex flex-col gap-4 lg:max-w-[90%] mx-auto">
+      <div className="min-h-[70vh] text-center flex flex-col justify-center items-center w-full gap-4">
         <h1 className="text-3xl font-semibold text-sky-700 md:text-4xl lg:text-6xl p-2 lg:max-w-[70%]">
           Your Code Snippets,{" "}
           <span className="bg-linear-to-r from-blue-500 via-green-600 to-red-600 bg-clip-text text-transparent">
@@ -212,7 +212,7 @@ export const greet = (name: string) =>
           and Shareable
         </h1>
 
-        <p className="text-teal-600 text-sm md:text-md font-semibold">
+        <p className="text-teal-600 text-sm md:text-lg font-semibold">
           Save, search, and reuse your snippets across any stack.
         </p>
 
@@ -232,10 +232,10 @@ export const greet = (name: string) =>
         </div>
 
         <div className="flex items-center gap-2 mt-4">
-          <div className="bg-blue-600 w-2 h-2 rounded-full"></div>
-          <div className="bg-red-600 w-2 h-2 rounded-full "></div>
-          <div className="bg-yellow-500 w-2 h-2 rounded-full "></div>
-          <div className="bg-green-600 w-2 h-2 rounded-full "></div>
+          <div className="bg-blue-600 w-2 h-2 rounded-full animate-bounce"></div>
+          <div className="bg-red-600 w-2 h-2 rounded-full animate-bounce [animation-delay:150ms]"></div>
+          <div className="bg-yellow-500 w-2 h-2 rounded-full animate-bounce [animation-delay:300ms]"></div>
+          <div className="bg-green-600 w-2 h-2 rounded-full animate-bounce [animation-delay:450ms]"></div>
         </div>
       </div>
 

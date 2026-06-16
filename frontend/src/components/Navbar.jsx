@@ -1,11 +1,14 @@
 // src/components/Navbar.jsx
 import { FaCode } from "react-icons/fa6";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import useAuth from "../customHooks/useAuth";
 import { PiSignOutBold } from "react-icons/pi";
+import { VscThreeBars } from "react-icons/vsc";
+import { useState } from "react";
+import useAuth from "../customHooks/useAuth";
 
 const Navbar = () => {
   const { isAuthenticated, loading, logout, resetAuth } = useAuth();
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,69 +16,83 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     resetAuth();
+    setIsNavOpen(false);
     navigate("/", { replace: true });
   };
 
+  const handleNavOpen = () => setIsNavOpen((prev) => !prev);
+
   const linkClass = (path) =>
-    `py-2 px-3 rounded text-sm rounded-3xl ${
+    `py-2 px-3 text-sm rounded-3xl w-full md:w-fit transition-all duration-100 cursor-pointer ${
       location.pathname === path
         ? "bg-blue-100 text-blue-600 font-semibold"
-        : "text-gray-700 font-semibold hover:bg-gray-100"
+        : "text-gray-700 font-semibold hover:bg-blue-100 hover:text-blue-600"
     }`;
 
   return (
-    <header className="flex items-center px-4 py-3 border-b border-gray-300 shadow-md/5 bg-gray-100/10 backdrop-blur-md sticky top-0 z-10 h-[10vh]">
-      <div className="">
+    <header className="flex items-center px-4 py-3 border-b border-gray-300 shadow-md/5 bg-white/60 backdrop-blur-md sticky w-full top-0 z-10  flex-col md:flex-row ">
+      {/* Logo */}
+      <div className="flex items-center justify-between w-full md:w-fit">
         <NavLink
           to="/"
           className="text-3xl text-teal-500 flex items-center gap-2 font-semibold"
         >
           <FaCode />
 
-          <span className="font-semibold text-gray-800 text-sm sm:text-base">
+          <span className="font-semibold text-gray-800 text-xs lg:text-[15px] font-mono">
             Code Snippet Manager
           </span>
         </NavLink>
+
+        <button
+          className="block md:hidden hover:scale-120 transition-all duration-100 cursor-pointer ml-auto"
+          type="button"
+          onClick={handleNavOpen}
+        >
+          <VscThreeBars className="text-2xl text-gray-800" />
+        </button>
       </div>
 
-      <nav className="flex items-center justify-between ml-auto">
-        <ul className="flex items-center gap-3 rounded-2xl p-2">
-          <li>
-            <NavLink to="/snippets" className={linkClass("/snippets")}>
-              Explore
-            </NavLink>
-          </li>
+      {/* All Navigations */}
+      <nav
+        className={`w-full md:w-auto md:ml-auto ml-0 transition-all duration-200 ease-in-out overflow-hidden md:max-h-full md:opacity-100 md:scale-y-100 origin-top
+    ${
+      isNavOpen
+        ? "max-h-fit opacity-100 scale-y-100 pt-4 md:pt-0"
+        : "max-h-0 opacity-0 scale-y-95 pt-0 md:pt-0"
+    }`}
+      >
+        <ul className="flex flex-col items-start justify-center md:flex-row md:items-center md:justify-between gap-2 md:p-0 ">
+          <NavLink to="/snippets" className={"w-full md:w-fit"}>
+            <li className={linkClass("/snippets")}>Explore</li>
+          </NavLink>
 
           {isAuthenticated && !loading && (
-            <li>
-              <NavLink to="/dashboard" className={linkClass("/dashboard")}>
-                My Dashboard
-              </NavLink>
-            </li>
+            <NavLink to="/dashboard" className={"w-full md:w-fit"}>
+              <li className={linkClass("/dashboard")}>My Dashboard</li>
+            </NavLink>
+          )}
+
+          {!loading && !isAuthenticated && (
+            <button
+              className="px-3 py-2 bg-blue-500 rounded-3xl text-white text-sm cursor-pointer hover:bg-blue-600 font-semibold w-full md:w-fit"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </button>
+          )}
+
+          {isAuthenticated && !loading && (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-300 text-red-900 text-sm cursor-pointer flex items-center gap-2 rounded-full hover:bg-red-400 shadow-sm font-semibold w-full md:w-fit"
+            >
+              <PiSignOutBold />
+              Logout
+            </button>
           )}
         </ul>
       </nav>
-
-      {!loading && !isAuthenticated && (
-        <div className="flex items-center">
-          <button
-            className="px-3 py-2 bg-blue-500 rounded-3xl text-white text-sm cursor-pointer hover:bg-blue-600 font-semibold"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-        </div>
-      )}
-
-      {isAuthenticated && !loading && (
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-300 text-red-900 text-sm cursor-pointer flex items-center gap-2 rounded-full hover:bg-red-400 shadow-sm font-semibold"
-        >
-          <PiSignOutBold />
-          Logout
-        </button>
-      )}
     </header>
   );
 };

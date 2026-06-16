@@ -57,7 +57,7 @@ const Snippets = () => {
           Hand-picked code from the community. Copy, learn, remix.
         </p>
 
-        <p className="text-md font-semibold mt-2 border border-gray-300 px-4 py-2 rounded-full w-fit shadow">
+        <p className="text-md font-semibold mt-2 border border-gray-300 px-4 py-2 rounded-full w-fit shadow bg-emerald-100">
           Total Snippets: {total || 0}
         </p>
       </div>

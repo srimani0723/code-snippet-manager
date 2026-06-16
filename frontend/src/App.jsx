@@ -16,7 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <SnippetsProvider>
-        <div className="min-h-screen bg-gray-100 flex flex-col w-full overflow-x-hidden relative">
+        <div className="min-h-screen flex flex-col w-full relative bg-orange-50">
           <Navbar />
           <main className="min-h-[80vh]">
             <Routes>
