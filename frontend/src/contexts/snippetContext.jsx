@@ -1,22 +1,19 @@
 // src/contexts/SnippetContext.jsx
 import {
   createContext,
-  useContext,
   useState,
-  useEffect,
   useCallback,
+  useEffect,
+  useContext,
 } from "react";
+
 import { api } from "../auth/api";
+import useAuth from "../customHooks/useAuth";
 
 const SnippetContext = createContext();
 
-export const useSnippets = () => {
-  const ctx = useContext(SnippetContext);
-  if (!ctx) throw new Error("useSnippets must be used within SnippetsProvider");
-  return ctx;
-};
-
 export const SnippetsProvider = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const [filters, setFilters] = useState({
     search: "",
     page: 1,
@@ -31,6 +28,7 @@ export const SnippetsProvider = ({ children }) => {
     total: 0,
     pages: 1,
   });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -38,9 +36,11 @@ export const SnippetsProvider = ({ children }) => {
     setLoading(true);
     setError("");
     try {
-      const params = new URLSearchParams(filters);
+      const params = new URLSearchParams(filters); // auto handles filters into query params
       const res = await api.get(`/snippets?${params.toString()}`);
+
       const data = res.data;
+
       setSnippetsData({
         snippets: Array.isArray(data.snippets) ? data.snippets : [],
         total: data.total || 0,
@@ -52,19 +52,14 @@ export const SnippetsProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, setLoading, setError, setSnippetsData]);
 
   useEffect(() => {
     fetchSnippets();
-  }, [fetchSnippets]);
+  }, [fetchSnippets, isAuthenticated]);
 
   const updateFilters = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
-  };
-
-  const deleteSnippet = async (id) => {
-    await api.delete(`/snippets/${id}`);
-    fetchSnippets();
   };
 
   return (
@@ -78,10 +73,20 @@ export const SnippetsProvider = ({ children }) => {
         loading,
         error,
         updateFilters,
-        deleteSnippet,
+        setLoading,
+        setError,
+        setSnippetsData,
       }}
     >
       {children}
     </SnippetContext.Provider>
   );
+};
+
+export const useSnippets = () => {
+  const context = useContext(SnippetContext);
+  if (!context) {
+    throw new Error("useSnippets must be used within a SnippetsProvider");
+  }
+  return context;
 };

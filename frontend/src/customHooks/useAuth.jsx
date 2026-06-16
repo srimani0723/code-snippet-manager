@@ -1,36 +1,39 @@
 // src/customHooks/useAuth.jsx
-import { useState, useEffect } from "react";
-import { checkAuth } from "../auth/api";
+import { api } from "../auth/api";
+import { useAuthenticate } from "../contexts/AuthContext";
 
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const {
+    isAuthenticated,
+    loading,
+    user,
+    setIsAuthenticated,
+    setUser,
+    setLoading,
+  } = useAuthenticate(); // Get auth context functions
 
-  useEffect(() => {
-    let mounted = true;
+  const resetAuth = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
-    checkAuth()
-      .then((data) => {
-        if (!mounted) return;
-        if (data?.authorised) {
-          setIsAuthenticated(true);
-          setUser(data.user);
-        } else {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+  const logout = async () => {
+    const res = await api.post("/auth/logout");
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    if (res.status === 200) {
+      resetAuth(); // clear auth state in context
+    }
+  };
 
-  return { isAuthenticated, loading, user };
+  return {
+    isAuthenticated,
+    loading,
+    user,
+    logout,
+    resetAuth,
+    setIsAuthenticated,
+    setUser,
+  };
 };
 
 export default useAuth;

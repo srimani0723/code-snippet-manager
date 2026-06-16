@@ -31,10 +31,19 @@ export const register = async (req, res) => {
 
     const token = createTokenAndSetCookie(res, {
       id: newUser._id,
+      _id: newUser._id,
       email: newUser.email,
+      name: newUser.name,
     });
 
-    res.status(201).json({ user: newUser });
+    res.status(201).json({
+      user: {
+        id: newUser._id,
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
   }
@@ -59,17 +68,30 @@ export const login = async (req, res) => {
 
     const token = createTokenAndSetCookie(res, {
       id: user._id,
+      _id: user._id,
       email: user.email,
+      name: user.name,
     });
 
-    res.status(201).json({ user });
+    res.status(201).json({
+      user: {
+        id: user._id,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
   }
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+  });
   res.status(200).json({
     message: "User logged out successfully",
   });

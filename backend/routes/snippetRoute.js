@@ -11,7 +11,9 @@ import { verifyToken } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.post("/", verifyToken, createSnippetController);
-router.get("/", verifyToken, getSnippetsController);
+
+router.get("/", getSnippetsController);
+
 router.put("/:id", verifyToken, updateSnippetController);
 router.delete("/:id", verifyToken, deleteSnippetController);
 router.post("/:id/fork", verifyToken, forkSnippetController);

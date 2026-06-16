@@ -1,15 +1,23 @@
 // src/pages/Snippets.jsx
-import { useSnippets } from "../contexts/snippetContext";
 import SnippetCard from "../components/SnippetCard";
 import Filters from "../components/Filters";
 import { api } from "../auth/api";
+import { useSnippets } from "../contexts/snippetContext";
+import useAuth from "../customHooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Snippets = () => {
   const { snippets, total, currentPage, pages, loading, error, updateFilters } =
     useSnippets();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleFork = async (id) => {
     try {
+      if (!isAuthenticated) {
+        navigate("/login");
+        return;
+      }
       await api.post(`/snippets/${id}/fork`);
       alert("Forked to your dashboard");
     } catch (err) {
@@ -26,11 +34,32 @@ const Snippets = () => {
   }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto w-full flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-gray-800">
-          Public Snippets ({total || 0})
+    <section className="p-4 mx-auto w-full flex flex-col gap-5 lg:max-w-[90%]">
+      <div className="">
+        <div className="flex items-center gap-2 my-2">
+          <div className="bg-blue-600 w-2 h-2 rounded-full"></div>
+          <div className="bg-red-600 w-2 h-2 rounded-full "></div>
+          <div className="bg-yellow-500 w-2 h-2 rounded-full "></div>
+          <div className="bg-green-600 w-2 h-2 rounded-full "></div>
+        </div>
+
+        <h1
+          className="text-xl sm:text-3xl
+       font-semibold text-gray-800 mt-4"
+        >
+          Public{" "}
+          <span className="bg-linear-to-r from-blue-600 via-green-500 to-red-600 bg-clip-text text-transparent">
+            Snippets
+          </span>{" "}
         </h1>
+
+        <p className="text-md text-gray-500">
+          Hand-picked code from the community. Copy, learn, remix.
+        </p>
+
+        <p className="text-md font-semibold mt-2 border border-gray-300 px-4 py-2 rounded-full w-fit shadow">
+          Total Snippets: {total || 0}
+        </p>
       </div>
 
       <Filters />
@@ -44,7 +73,7 @@ const Snippets = () => {
           No snippets found.
         </div>
       ) : (
-        <div className="flex flex-col gap-3 w-full">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 w-full mx-auto">
           {snippets.map((snip) => (
             <SnippetCard
               key={snip._id}
@@ -78,7 +107,7 @@ const Snippets = () => {
           </button>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

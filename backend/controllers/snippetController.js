@@ -24,15 +24,15 @@ export const getSnippetsController = async (req, res) => {
       language,
       tags,
       isPublic = "true",
-      mine,
+      userId,
       sortBy = "createdAt",
       sortOrder = "desc",
     } = req.query;
 
     const filters = {};
 
-    if (mine === "true") {
-      filters.user = req.user.id; // only my snippets
+    if (userId && userId !== "undefined" && userId !== "null") {
+      filters.user = userId; // only my snippets
     } else {
       filters.isPublic = isPublic === "true"; // public listing
     }
@@ -52,7 +52,7 @@ export const getSnippetsController = async (req, res) => {
       parseInt(page, 10),
       parseInt(limit, 10),
       sortBy,
-      sortOrder
+      sortOrder,
     );
 
     res.status(200).json({ snippets, total, pages });
