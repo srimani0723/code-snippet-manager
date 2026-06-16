@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSnippets } from "../contexts/snippetContext";
+import { useSnippets } from "../contexts/SnippetContext";
 
 const Filters = () => {
   const { filters, updateFilters } = useSnippets();

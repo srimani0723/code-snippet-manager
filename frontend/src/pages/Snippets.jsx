@@ -2,7 +2,7 @@
 import SnippetCard from "../components/SnippetCard";
 import Filters from "../components/Filters";
 import { api } from "../auth/api";
-import { useSnippets } from "../contexts/snippetContext";
+import { useSnippets } from "../contexts/SnippetContext";
 import useAuth from "../customHooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
