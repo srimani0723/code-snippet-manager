@@ -100,7 +100,6 @@ const SnippetCard = ({
           }}
           customStyle={{
             margin: 0,
-            padding: "8px 10px",
             fontSize: "14px",
             lineHeight: 1.4,
             boxSizing: "border-box",
