@@ -1,5 +1,5 @@
 // src/pages/Dashboard.jsx
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ import SnippetCard from "../components/SnippetCard";
 import Spinner from "../components/Spinner";
 import useFetchQuery from "../hooks/useFetchQuery";
 import useFetchMutation from "../hooks/useFetchMutation";
+import ThemeContext from "../contexts/ThemeContext";
 
 const apiStatusConstants = {
   initial: "INITIAL",
@@ -20,6 +21,9 @@ const apiStatusConstants = {
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
+  const { theme, themes } = useContext(ThemeContext);
+  const isDark = theme === themes.DARK;
+
   const [editing, setEditing] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
 
@@ -119,18 +123,30 @@ const Dashboard = () => {
     <>
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl md:text-4xl font-semibold text-gray-800">
+          <h1
+            className={`text-2xl md:text-4xl font-semibold ${
+              isDark ? "text-white" : "text-gray-800"
+            }`}
+          >
             Your{" "}
             <span className="bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-cyan-500">
               snippets
             </span>
           </h1>
-          <p className="text-md text-gray-600">
+          <p
+            className={`text-md ${
+              isDark ? "text-primary-text/60" : "text-gray-600"
+            }`}
+          >
             Hi {email}. Keep building your library
           </p>
         </div>
         <button
-          className="px-4 py-2 bg-emerald-200 text-emerald-900 text-sm rounded-full hover:bg-emerald-300 cursor-pointer shadow-sm flex items-center gap-2 font-semibold font-mono "
+          className={`px-4 py-2 text-sm rounded-full cursor-pointer shadow-xs flex items-center gap-2 font-semibold font-mono transition-all duration-150 active:scale-95 ${
+            isDark
+              ? "bg-emerald-950/40 text-emerald-400 border border-emerald-900/60 hover:bg-emerald-900/20"
+              : "bg-emerald-200 text-emerald-900 hover:bg-emerald-300"
+          }`}
           onClick={toggleSnippetForm}
         >
           <IoMdAdd className="text-lg" />
@@ -139,23 +155,53 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="flex flex-col gap-1 border border-gray-300 p-4 rounded-3xl bg-white shadow-sm/5">
-          <h1 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-            <div className="bg-red-600 w-2 h-2 rounded-full "></div> Total
+        <div
+          className={`flex flex-col gap-1 border p-4 rounded-3xl shadow-xs ${
+            isDark
+              ? "bg-primary-bg4 border-primary-bg3 text-primary-text"
+              : "bg-white border-gray-300 text-gray-800"
+          }`}
+        >
+          <h1
+            className={`text-sm font-semibold flex items-center gap-2 ${
+              isDark ? "text-white" : "text-gray-800"
+            }`}
+          >
+            <div className="bg-red-600 w-2 h-2 rounded-full"></div> Total
           </h1>
           <p className="text-3xl font-semibold">{snippets.length}</p>
         </div>
 
-        <div className="flex flex-col gap-1 border border-gray-300 p-4 rounded-3xl bg-white shadow-sm/5">
-          <h1 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-            <div className="bg-green-600 w-2 h-2 rounded-full "></div> Public
+        <div
+          className={`flex flex-col gap-1 border p-4 rounded-3xl shadow-xs ${
+            isDark
+              ? "bg-primary-bg4 border-primary-bg3 text-primary-text"
+              : "bg-white border-gray-300 text-gray-800"
+          }`}
+        >
+          <h1
+            className={`text-sm font-semibold flex items-center gap-2 ${
+              isDark ? "text-white" : "text-gray-800"
+            }`}
+          >
+            <div className="bg-green-600 w-2 h-2 rounded-full"></div> Public
           </h1>
           <p className="text-3xl font-semibold">{publicSnippets.length}</p>
         </div>
 
-        <div className="flex flex-col gap-1 border border-gray-300 p-4 rounded-3xl bg-white shadow-sm/5">
-          <h1 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-            <div className="bg-yellow-600 w-2 h-2 rounded-full "></div> Private
+        <div
+          className={`flex flex-col gap-1 border p-4 rounded-3xl shadow-xs ${
+            isDark
+              ? "bg-primary-bg4 border-primary-bg3 text-primary-text"
+              : "bg-white border-gray-300 text-gray-800"
+          }`}
+        >
+          <h1
+            className={`text-sm font-semibold flex items-center gap-2 ${
+              isDark ? "text-white" : "text-gray-800"
+            }`}
+          >
+            <div className="bg-yellow-600 w-2 h-2 rounded-full"></div> Private
           </h1>
           <p className="text-3xl font-semibold">
             {snippets.length - publicSnippets.length}
@@ -176,7 +222,11 @@ const Dashboard = () => {
       )}
 
       {snippets.length === 0 && !error ? (
-        <div className="text-center text-gray-600 text-sm mt-4">
+        <div
+          className={`text-center text-sm mt-4 ${
+            isDark ? "text-primary-text/60" : "text-gray-600"
+          }`}
+        >
           You have no snippets yet.
         </div>
       ) : (

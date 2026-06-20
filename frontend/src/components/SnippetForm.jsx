@@ -1,6 +1,7 @@
 // src/components/SnippetForm.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import ThemeContext from "../contexts/ThemeContext";
 
 const languageOptions = [
   "javascript",
@@ -21,6 +22,9 @@ const SnippetForm = ({
   onCancel,
   submitting = false,
 }) => {
+  const { theme, themes } = useContext(ThemeContext);
+  const isDark = theme === themes.DARK;
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -66,21 +70,43 @@ const SnippetForm = ({
     onSubmit(payload);
   };
 
+  const inputClass = `px-4 py-2 border rounded-full text-sm font-semibold font-mono lg:col-span-2 focus:ring-1 focus:ring-blue-400 outline-hidden ${
+    isDark
+      ? "bg-primary-bg1 border-gray-600 text-primary-text placeholder:text-gray-500 focus:border-blue-500"
+      : "bg-white border-gray-300 placeholder:text-gray-600 outline-blue-400 focus:border-blue-400"
+  }`;
+
+  const textareaClass = `px-4 py-2 border rounded-xl text-sm font-semibold font-mono lg:col-span-2 focus:ring-1 focus:ring-blue-400 outline-hidden ${
+    isDark
+      ? "bg-primary-bg1 border-gray-600 text-primary-text placeholder:text-gray-500 focus:border-blue-500"
+      : "bg-white border-gray-300 placeholder:text-gray-600 outline-blue-400 focus:border-blue-400"
+  }`;
+
   return (
     <div className="bg-black/20 backdrop-blur-sm z-10 fixed top-0 left-0 right-0 w-full h-full flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-3 border border-gray-200 rounded-4xl p-6 bg-white w-full shadow max-w-[500px] lg:max-w-[50%] mx-auto"
+        className={`grid grid-cols-1 lg:grid-cols-2 gap-3 border rounded-4xl p-6 w-full shadow max-w-[500px] lg:max-w-[50%] mx-auto ${
+          isDark
+            ? "bg-primary-bg2 border-gray-600 text-primary-text shadow-black/45"
+            : "bg-white border-gray-200 text-gray-800"
+        }`}
       >
         <div className="lg:col-span-2 flex items-center justify-between">
-          <h2 className="lg:col-span-1 text-xl lg:text-2xl font-semibold text-teal-800 font-mono">
+          <h2
+            className={`lg:col-span-1 text-xl lg:text-2xl font-semibold font-mono ${
+              isDark ? "text-teal-400" : "text-teal-800"
+            }`}
+          >
             {initialData ? "Edit Snippet" : "New Snippet"}
           </h2>
 
           <button
             type="button"
             onClick={onCancel}
-            className="lg:grid-col-2 cursor-pointer p-1 text-red-800 text-3xl hover:scale-120 transition-transform duration-200"
+            className={`lg:grid-col-2 cursor-pointer p-1 text-3xl hover:scale-120 transition-transform duration-200 ${
+              isDark ? "text-red-400 hover:text-red-300" : "text-red-800 hover:text-red-900"
+            }`}
           >
             <IoCloseCircleOutline />
           </button>
@@ -89,7 +115,7 @@ const SnippetForm = ({
         <input
           type="text"
           placeholder="Title"
-          className="px-4 py-2 border border-gray-300 rounded-full text-sm placeholder:text-gray-600 font-semibold font-mono outline-blue-400 focus:ring-1 focus:ring-blue-400 lg:col-span-2"
+          className={inputClass}
           value={form.title}
           onChange={handleChange("title")}
           required
@@ -97,7 +123,7 @@ const SnippetForm = ({
         />
 
         <select
-          className="px-4 py-2 border border-gray-300 rounded-full text-sm placeholder:text-gray-600 font-semibold font-mono outline-blue-400 focus:ring-1 focus:ring-blue-400 lg:col-span-2"
+          className={inputClass}
           value={form.language}
           onChange={handleChange("language")}
           disabled={submitting}
@@ -112,7 +138,7 @@ const SnippetForm = ({
         <input
           type="text"
           placeholder="Description"
-          className="px-4 py-2 border border-gray-300 rounded-full text-sm placeholder:text-gray-600 font-semibold font-mono outline-blue-400 focus:ring-1 focus:ring-blue-400 lg:col-span-2"
+          className={inputClass}
           value={form.description}
           onChange={handleChange("description")}
           disabled={submitting}
@@ -121,7 +147,7 @@ const SnippetForm = ({
         <textarea
           rows={6}
           placeholder="Code"
-          className="px-4 py-2 border border-gray-300 rounded-xl text-sm placeholder:text-gray-600 font-semibold font-mono outline-blue-400 focus:ring-1 focus:ring-blue-400 lg:col-span-2"
+          className={textareaClass}
           value={form.code}
           onChange={handleChange("code")}
           required
@@ -131,13 +157,17 @@ const SnippetForm = ({
         <input
           type="text"
           placeholder="tags: react,api,utils"
-          className="px-4 py-2 border border-gray-300 rounded-full text-sm placeholder:text-gray-600 font-semibold font-mono outline-blue-400 focus:ring-1 focus:ring-blue-400 lg:col-span-2"
+          className={inputClass}
           value={form.tags}
           onChange={handleChange("tags")}
           disabled={submitting}
         />
 
-        <label className="flex items-center gap-2 text-md ml-auto text-gray-700 font-semibold font-mono cursor-pointer lg:col-span-2">
+        <label
+          className={`flex items-center gap-2 text-md ml-auto font-semibold font-mono cursor-pointer lg:col-span-2 ${
+            isDark ? "text-primary-text" : "text-gray-700"
+          }`}
+        >
           <input
             type="checkbox"
             checked={form.isPublic}
@@ -153,7 +183,11 @@ const SnippetForm = ({
             <button
               type="button"
               onClick={onCancel}
-              className="px-3 py-1 border border-pink-400 rounded-full text-sm text-pink-900 bg-pink-200 shadow-md hover:bg-pink-300 cursor-pointer font-semibold"
+              className={`px-3 py-1 border rounded-full text-sm cursor-pointer font-semibold shadow-md transition-all duration-150 active:scale-95 ${
+                isDark
+                  ? "border-pink-900/60 bg-pink-950/30 text-pink-400 hover:bg-pink-900/20"
+                  : "border-pink-400 bg-pink-200 text-pink-900 hover:bg-pink-300"
+              }`}
               disabled={submitting}
             >
               Cancel
@@ -161,7 +195,11 @@ const SnippetForm = ({
           )}
           <button
             type="submit"
-            className="px-3 py-1 border border-blue-400 rounded-full text-sm text-blue-900 bg-blue-200 shadow-md hover:bg-blue-300 cursor-pointer font-semibold disabled:opacity-60"
+            className={`px-3 py-1 border rounded-full text-sm cursor-pointer font-semibold shadow-md transition-all duration-150 active:scale-95 disabled:opacity-60 ${
+              isDark
+                ? "border-blue-900/60 bg-blue-950/30 text-blue-400 hover:bg-blue-900/20"
+                : "border-blue-400 bg-blue-200 text-blue-900 hover:bg-blue-300"
+            }`}
             disabled={submitting}
           >
             {submitting

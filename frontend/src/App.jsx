@@ -1,7 +1,7 @@
 // src/App.jsx
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,9 +12,11 @@ import ProtectedRoute from "./components/protectedRoute";
 import Footer from "./components/Footer";
 import useAuth from "./hooks/useAuth";
 import { toast } from "react-toastify";
+import ThemeContext from "./contexts/ThemeContext";
 
 function App() {
   const { checkUser } = useAuth();
+  const { theme, themes } = useContext(ThemeContext);
 
   useEffect(() => {
     const authCheck = async () => {
@@ -34,7 +36,9 @@ function App() {
   }, [checkUser]);
 
   return (
-    <div className="min-h-screen flex flex-col w-full relative bg-orange-50">
+    <div
+      className={`min-h-screen flex flex-col w-full relative ${theme === themes.LIGHT ? "bg-orange-50" : "bg-primary-bg1"}`}
+    >
       <Navbar />
       <main className="min-h-[80vh]">
         <Routes>

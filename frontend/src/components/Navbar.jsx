@@ -3,14 +3,17 @@ import { FaCode } from "react-icons/fa6";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { PiSignOutBold } from "react-icons/pi";
 import { VscThreeBars } from "react-icons/vsc";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import useAuth from "../hooks/useAuth";
 import useFetchMutation from "../hooks/useFetchMutation";
 import { toast } from "react-toastify";
+import ThemeContext from "../contexts/ThemeContext";
+import { FaSun, FaMoon } from "react-icons/fa6";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, themes, toggleTheme } = useContext(ThemeContext);
 
   const { isAuthenticated, loading, resetAuth } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -39,17 +42,37 @@ const Navbar = () => {
     navigate("/", { replace: true });
   };
 
+  const themeButton = (extraClass = "") => (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className={`hover:scale-110 transition-all duration-100 cursor-pointer rounded-full p-1 ${theme === themes.DARK ? "bg-primary-border " : "bg-gray-300 "} ${extraClass}`}
+    >
+      {theme === themes.DARK ? (
+        <FaSun className="text-xl text-yellow-200" />
+      ) : (
+        <FaMoon className="text-xl text-gray-800" />
+      )}
+    </button>
+  );
+
   const toggleNavbar = () => setIsNavOpen((prev) => !prev);
 
   const linkClass = (path) =>
     `py-2 px-3 text-sm rounded-3xl w-full md:w-fit transition-all duration-100 cursor-pointer ${
       location.pathname === path
-        ? "bg-blue-100 text-blue-600 font-semibold"
-        : "text-gray-700 font-semibold hover:bg-blue-100 hover:text-blue-600"
+        ? theme === themes.DARK
+          ? "bg-primary-bg3 text-gray-100 font-semibold"
+          : "bg-blue-100 text-blue-600 font-semibold"
+        : theme === themes.DARK
+          ? "text-primary-text font-semibold hover:bg-primary-bg3 hover:text-gray-100"
+          : "text-gray-700 font-semibold hover:bg-blue-100 hover:text-blue-600"
     }`;
 
   return (
-    <header className="flex items-center px-4 py-3 border-b border-gray-300 shadow-md/5 bg-white/60 backdrop-blur-md sticky w-full top-0 z-10  flex-col md:flex-row ">
+    <header
+      className={`flex items-center px-4 py-3 backdrop-blur-md sticky w-full top-0 z-10  flex-col md:flex-row ${theme === themes.DARK ? "bg-primary-bg2 border-b border-primary-border shadow-md/5 " : "bg-white/60 border-b border-gray-300 shadow-md/5 "}`}
+    >
       {/* Logo */}
       <div className="flex items-center justify-between w-full md:w-fit">
         <NavLink
@@ -58,18 +81,25 @@ const Navbar = () => {
         >
           <FaCode />
 
-          <span className="font-semibold text-gray-800 text-xs lg:text-[15px] font-mono">
+          <span
+            className={`font-semibold text-xs lg:text-[15px] font-mono ${theme === themes.DARK ? "text-primary-text " : "text-gray-800 "}`}
+          >
             Code Snippet Manager
           </span>
         </NavLink>
 
-        <button
-          className="block md:hidden hover:scale-120 transition-all duration-100 cursor-pointer ml-auto"
-          type="button"
-          onClick={toggleNavbar}
-        >
-          <VscThreeBars className="text-2xl text-gray-800" />
-        </button>
+        <div className="flex items-center gap-4">
+          {themeButton("block md:hidden")}
+          <button
+            className="block md:hidden hover:scale-120 transition-all duration-100 cursor-pointer"
+            type="button"
+            onClick={toggleNavbar}
+          >
+            <VscThreeBars
+              className={`text-2xl ${theme === themes.DARK ? "text-primary-text " : "text-gray-800 "}`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* All Navigations */}
@@ -82,6 +112,8 @@ const Navbar = () => {
     }`}
       >
         <ul className="flex flex-col items-start justify-center md:flex-row md:items-center md:justify-between gap-2 md:p-0 ">
+          {themeButton("hidden md:block")}
+
           <NavLink to="/snippets" className={"w-full md:w-fit"}>
             <li className={linkClass("/snippets")} onClick={toggleNavbar}>
               Explore

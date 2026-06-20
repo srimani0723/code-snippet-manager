@@ -7,6 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import useFetchQuery from "../hooks/useFetchQuery";
 import useAuth from "../hooks/useAuth";
+import { useContext } from "react";
+import ThemeContext from "../contexts/ThemeContext";
 
 import SnippetCard from "../components/SnippetCard";
 import Filters from "../components/Filters";
@@ -26,6 +28,7 @@ const Snippets = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { theme, themes } = useContext(ThemeContext);
 
   const { page, search, language, tags, isPublic, limit } = useSelector(
     (state) => state.publicSnippets,
@@ -91,17 +94,29 @@ const Snippets = () => {
         <button
           disabled={page === 1}
           onClick={onDecreasePageNumber}
-          className="p-2 border-2 border-gray-400 rounded-4xl disabled:opacity-70  bg-sky-200 hover:bg-sky-300 cursor-pointer text-sky-900 font-semibold shadow hover:scale-110 transition-transform duration-200"
+          className={`p-2 border-2 rounded-4xl disabled:opacity-70 cursor-pointer font-semibold shadow hover:scale-110 transition-transform duration-200 ${
+            theme === themes.DARK
+              ? "bg-primary-bg3 hover:bg-primary-bg4 border-primary-bg3 text-primary-text"
+              : "bg-sky-200 hover:bg-sky-300 border-gray-400 text-sky-900"
+          }`}
         >
           <FaLessThan />
         </button>
-        <span className="text-emerald-700 font-mono font-semibold text-xl">
+        <span
+          className={`font-mono font-semibold text-xl ${
+            theme === themes.DARK ? "text-emerald-400" : "text-emerald-700"
+          }`}
+        >
           {page} - {pages}
         </span>
         <button
           disabled={page === pages}
           onClick={onIncreasePageNumber}
-          className="p-2 border-2 border-gray-400 rounded-4xl disabled:opacity-70  bg-sky-200 hover:bg-sky-300 cursor-pointer text-sky-900 font-semibold shadow hover:scale-110 transition-transform duration-200"
+          className={`p-2 border-2 rounded-4xl disabled:opacity-70 cursor-pointer font-semibold shadow hover:scale-110 transition-transform duration-200 ${
+            theme === themes.DARK
+              ? "bg-primary-bg3 hover:bg-primary-bg4 border-primary-bg3 text-primary-text"
+              : "bg-sky-200 hover:bg-sky-300 border-gray-400 text-sky-900"
+          }`}
         >
           <FaGreaterThan />
         </button>
@@ -161,14 +176,22 @@ const Snippets = () => {
           <div className="bg-green-600 w-2 h-2 rounded-full "></div>
         </div>
 
-        <h1 className="text-xl sm:text-3xl font-semibold text-gray-800 mt-4">
+        <h1
+          className={`text-xl sm:text-3xl font-semibold mt-4 ${
+            theme === themes.DARK ? "text-white" : "text-gray-800"
+          }`}
+        >
           Public{" "}
           <span className="bg-linear-to-r from-blue-600 via-green-500 to-red-600 bg-clip-text text-transparent">
             Snippets
           </span>{" "}
         </h1>
 
-        <p className="text-md text-gray-500">
+        <p
+          className={`text-md ${
+            theme === themes.DARK ? "text-primary-text/60" : "text-gray-500"
+          }`}
+        >
           Hand-picked code from the community. Copy, learn, remix.
         </p>
       </div>
