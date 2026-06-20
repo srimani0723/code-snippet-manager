@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { useSnippets } from "../contexts/SnippetContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updateFilters } from "../reducers/publicSnippetsSlice";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
-const Filters = () => {
-  const { filters, updateFilters } = useSnippets();
+const Filters = ({ total }) => {
+  const dispatch = useDispatch();
+  const { search, language, tags, isPublic } = useSelector(
+    (state) => state.publicSnippets,
+  );
+
+  const filters = { search, language, tags, isPublic };
 
   const [local, setLocal] = useState({
     search: "",
@@ -11,26 +18,18 @@ const Filters = () => {
     isPublic: true,
   });
 
-  // useEffect(() => {
-  //   if (!filters) return;
-  //   setLocal({
-  //     search: filters.search || "",
-  //     language: filters.language || "",
-  //     tags: filters.tags || "",
-  //     isPublic: typeof filters.isPublic === "boolean" ? filters.isPublic : true,
-  //   });
-  // }, [filters]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateFilters({
-      ...filters,
-      search: local.search.trim(),
-      language: local.language,
-      tags: local.tags.trim(),
-      isPublic: local.isPublic,
-      page: 1,
-    });
+    dispatch(
+      updateFilters({
+        ...filters,
+        search: local.search.trim(),
+        language: local.language,
+        tags: local.tags.trim(),
+        isPublic: local.isPublic,
+        page: 1,
+      }),
+    );
   };
 
   const handleClear = () => {
@@ -48,14 +47,14 @@ const Filters = () => {
       tags: "",
       isPublic: true,
     });
-    updateFilters(cleared);
+    dispatch(updateFilters(cleared));
   };
 
   if (!filters) return null;
 
   return (
     <form onSubmit={handleSubmit} className="mb-4 rounded flex flex-col gap-3">
-      <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-3">
+      <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-3 items-center">
         <input
           type="text"
           placeholder="Search..."
@@ -83,28 +82,26 @@ const Filters = () => {
           onChange={(e) => setLocal({ ...local, tags: e.target.value })}
         />
 
-        <label className="flex items-center gap-1 text-md text-gray-700 cursor-pointer mx-2 ">
-          <input
-            type="checkbox"
-            checked={local.isPublic}
-            onChange={(e) => setLocal({ ...local, isPublic: e.target.checked })}
-            className="cursor-pointer w-4 h-4"
-          />
-          Public only
-        </label>
+        <p className="text-md font-semibold rounded-full w-fit text-emerald-800 font-mono flex items-center gap-1 mx-2 ">
+          <IoMdCheckmarkCircleOutline className="text-emerald-800 text-3xl bg-emerald-100 rounded-full" />{" "}
+          <sub className="text-xs">Public Only</sub>
+        </p>
       </div>
 
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end items-center px-2">
+        <p className="text-sm md:text-lg font-semibold rounded-full w-fit text-blue-800 font-mono mr-auto">
+          Total Snippets: {total || 0}
+        </p>
         <button
           type="button"
           onClick={handleClear}
-          className="px-4 py-2 border border-gray-400  text-md text-gray-700 cursor-pointer rounded-full"
+          className="px-4 py-2 border border-gray-400  text-sm md:text-md text-gray-700 cursor-pointer rounded-full"
         >
           Clear
         </button>
         <button
           type="submit"
-          className="px-4 py-2 w-fit bg-blue-600  text-white rounded-full text-md cursor-pointer"
+          className="px-4 py-2 w-fit bg-blue-600  text-white rounded-full text-sm md:text-md cursor-pointer"
         >
           Apply
         </button>

@@ -2,8 +2,11 @@
 import { FaCodeFork } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { MdOutlineEdit } from "react-icons/md";
-
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { toast } from "react-toastify";
+
+import useFetchMutation from "../hooks/useFetchMutation";
+import ConfirmToast from "../components/ConfirmToast";
 
 const languageMap = {
   javascript: "javascript",
@@ -20,24 +23,58 @@ const languageMap = {
 
 const SnippetCard = ({
   snippet,
-  onDelete,
   onClickEdit,
   onClickFork,
   userSnippet,
+  refreshSnippets,
 }) => {
+  const deleteSnippetMutation = useFetchMutation({
+    key: "deleteSnippet",
+    method: "DELETE",
+  });
+
+  const onDelete = async (id) => {
+    ConfirmToast(
+      "Are you sure you want to delete this snippet?",
+      () => {
+        // on Confirm
+        deleteSnippetMutation.mutate(
+          {
+            url: `/snippets/${id}`,
+          },
+          {
+            onSuccess: () => {
+              toast.success("Snippet deleted successfully!");
+              refreshSnippets();
+            },
+            onError: (err) => {
+              toast.error(err.response?.data?.message || "Delete failed");
+            },
+          },
+        );
+      },
+      () => {
+        // on Cancel
+        toast.info("Delete cancelled");
+      },
+    );
+  };
+
   const {
+    _id,
     title,
     description,
     isPublic,
     language,
     user,
-    updatedAt,
     tags,
     createdAt,
     code,
+    forkParent,
   } = snippet;
 
   const mappedlanguage = languageMap[language?.toLowerCase()] || "javascript";
+  const forkedUsersCount = snippet?.forkUsers?.length || 0;
 
   const formattedDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-IN", {
@@ -108,6 +145,7 @@ const SnippetCard = ({
             backgroundColor: userSnippet ? "#f0f8ff" : "white",
             borderRadius: "20px",
             padding: "1rem",
+            height: "100%",
           }}
         >
           {code || ""}
@@ -115,9 +153,12 @@ const SnippetCard = ({
       </div>
 
       {userSnippet && (
-        <div className="flex items-center gap-2 mt-2 px-6">
+        <div className="flex items-center gap-2 mt-2 px-6 flex-wrap">
           {tags.map((tag) => (
-            <p className="text-sm text-orange-900 bg-orange-50 rounded-full px-3 py-1 font-semibold">
+            <p
+              className="text-sm text-orange-900 bg-orange-50 rounded-full px-3 py-1 font-semibold"
+              key={`${_id}-${tag}`}
+            >
               #{tag}
             </p>
           ))}
@@ -127,6 +168,13 @@ const SnippetCard = ({
       {userSnippet && (
         <p className="text-sm text-teal-900 font-mono px-6">
           Created On: {formattedDate(createdAt)}
+        </p>
+      )}
+
+      {userSnippet && forkParent?.parentUserDetails?.name && (
+        <p className="font-semibold text-[15px] text-sky-700 flex items-center gap-1 px-6">
+          <FaCodeFork className="text-sm md:text-xl" />
+          <span>forked @{forkParent?.parentUserDetails?.name}</span>
         </p>
       )}
 
@@ -144,6 +192,11 @@ const SnippetCard = ({
               className="text-blue-600 whitespace-nowrap flex items-center gap-1 text-[15px] font-semibold cursor-pointer px-2 py-1 rounded-full hover:text-gray-700 hover:bg-gray-100"
             >
               <FaCodeFork className="text-xl" /> Fork
+              {forkedUsersCount > 0 ? (
+                <span className="text-md font-mono font-bold bg-gray-100 px-2 py-0 border-2 border-gray-300 rounded-full">
+                  {forkedUsersCount}
+                </span>
+              ) : null}
             </button>
           )}
           {userSnippet && (
@@ -155,7 +208,7 @@ const SnippetCard = ({
               Edit
             </button>
           )}
-          {onDelete && (
+          {userSnippet && (
             <button
               onClick={() => onDelete(snippet._id)}
               className="text-red-600 flex items-center gap-1 font-semibold text-[15px] cursor-pointer hover:bg-red-100 hover:rounded-full px-3 py-1 transition-all duration-200"

@@ -1,7 +1,7 @@
 import { CgSpinner } from "react-icons/cg";
 
-const Spinner = () => {
-  return <CgSpinner className="animate-spin text-xl mx-auto" />;
+const Spinner = ({ className }) => {
+  return <CgSpinner className={`animate-spin  mx-auto ${className}`} />;
 };
 
 export default Spinner;

@@ -4,23 +4,42 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { PiSignOutBold } from "react-icons/pi";
 import { VscThreeBars } from "react-icons/vsc";
 import { useState } from "react";
-import useAuth from "../customHooks/useAuth";
+import useAuth from "../hooks/useAuth";
+import useFetchMutation from "../hooks/useFetchMutation";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { isAuthenticated, loading, logout, resetAuth } = useAuth();
-  const [isNavOpen, setIsNavOpen] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { isAuthenticated, loading, resetAuth } = useAuth();
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const logoutMutation = useFetchMutation({ key: "logout", method: "POST" });
+
+  const handleLogin = () => {
+    navigate("/login");
+    toggleNavbar();
+  };
+
   const handleLogout = () => {
-    logout();
-    resetAuth();
+    logoutMutation.mutate(
+      { url: "/auth/logout" },
+      {
+        onSuccess: () => {
+          resetAuth();
+          toast.success("Logged out successfully!");
+        },
+        onError: (error) => {
+          toast.error(`Logout failed! ${error.message}`);
+        },
+      },
+    );
     setIsNavOpen(false);
     navigate("/", { replace: true });
   };
 
-  const handleNavOpen = () => setIsNavOpen((prev) => !prev);
+  const toggleNavbar = () => setIsNavOpen((prev) => !prev);
 
   const linkClass = (path) =>
     `py-2 px-3 text-sm rounded-3xl w-full md:w-fit transition-all duration-100 cursor-pointer ${
@@ -47,7 +66,7 @@ const Navbar = () => {
         <button
           className="block md:hidden hover:scale-120 transition-all duration-100 cursor-pointer ml-auto"
           type="button"
-          onClick={handleNavOpen}
+          onClick={toggleNavbar}
         >
           <VscThreeBars className="text-2xl text-gray-800" />
         </button>
@@ -64,19 +83,23 @@ const Navbar = () => {
       >
         <ul className="flex flex-col items-start justify-center md:flex-row md:items-center md:justify-between gap-2 md:p-0 ">
           <NavLink to="/snippets" className={"w-full md:w-fit"}>
-            <li className={linkClass("/snippets")}>Explore</li>
+            <li className={linkClass("/snippets")} onClick={toggleNavbar}>
+              Explore
+            </li>
           </NavLink>
 
           {isAuthenticated && !loading && (
             <NavLink to="/dashboard" className={"w-full md:w-fit"}>
-              <li className={linkClass("/dashboard")}>My Dashboard</li>
+              <li className={linkClass("/dashboard")} onClick={toggleNavbar}>
+                My Dashboard
+              </li>
             </NavLink>
           )}
 
           {!loading && !isAuthenticated && (
             <button
               className="px-3 py-2 bg-blue-500 rounded-3xl text-white text-sm cursor-pointer hover:bg-blue-600 font-semibold w-full md:w-fit"
-              onClick={() => navigate("/login")}
+              onClick={handleLogin}
             >
               Login
             </button>

@@ -1,35 +1,49 @@
 // Login.jsx
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../auth/api";
-import useAuth from "../customHooks/useAuth";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import useFetchMutation from "../hooks/useFetchMutation";
+import { setAuth } from "../reducers/authCheckSlice";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUser } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const loginMutate = useFetchMutation({
+    key: "login",
+    method: "POST",
+  });
+
+  const { isAuthenticated, user } = useAuth();
+  if (isAuthenticated && user) {
+    return <Navigate to={"/dashboard"} />;
+  }
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setTimeout(async () => {
-      try {
-        const res = await api.post("/auth/login", form);
-        setIsAuthenticated(true);
-        setUser(res.data.user);
-        navigate("/dashboard", { replace: true });
-      } catch (err) {
-        setError(err.response?.data?.message || "Login failed");
-      } finally {
-        setLoading(false);
-      }
-    }, 500);
+    loginMutate.mutate(
+      { url: "/auth/login", data: form },
+      {
+        onSuccess: (data) => {
+          if (data?.user) {
+            toast.success("Login successful!");
+            dispatch(setAuth(data));
+            navigate("/dashboard", { replace: true });
+          }
+        },
+        onError: (err) => {
+          console.log(err);
+          toast.error(err.response?.data?.message || "Login failed");
+        },
+      },
+    );
   };
 
   const onShowPassword = () => {
@@ -53,7 +67,7 @@ const Login = () => {
           SignIn to access your snippets
         </p>
 
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-3" onSubmit={onSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -83,14 +97,17 @@ const Login = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loginMutate.loading}
             className="mt-1 px-3 py-2 bg-blue-600 text-white text-sm disabled:opacity-60 text-center rounded-full cursor-pointer hover:bg-blue-700 shadow-md"
           >
-            {loading ? <Spinner /> : "Login"}
+            {loginMutate.loading ? <Spinner /> : "Login"}
           </button>
-          {error && (
-            <p className="text-xs text-red-600 text-center mt-1">{error}</p>
-          )}
+
+          {/* {loginMutate.isError && (
+            <p className="text-xs text-red-600 text-center mt-1">
+              {loginMutate.error?.response?.data?.message || "Login failed"}
+            </p>
+          )} */}
         </form>
         <p className="text-sm text-gray-600 mt-3 text-center font-mono font-semibold">
           New here?{" "}

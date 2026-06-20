@@ -31,18 +31,22 @@ const SnippetForm = ({
   });
 
   useEffect(() => {
-    if (initialData) {
-      setForm({
-        title: initialData.title || "",
-        description: initialData.description || "",
-        code: initialData.code || "",
-        language: initialData.language || "javascript",
-        tags: Array.isArray(initialData.tags)
-          ? initialData.tags.join(",")
-          : initialData.tags || "",
-        isPublic: initialData.isPublic ?? true,
-      });
+    async function setInitialForm() {
+      if (initialData) {
+        setForm({
+          title: initialData.title || "",
+          description: initialData.description || "",
+          code: initialData.code || "",
+          language: initialData.language || "javascript",
+          tags: Array.isArray(initialData.tags)
+            ? initialData.tags.join(",")
+            : initialData.tags || "",
+          isPublic: initialData.isPublic ?? true,
+        });
+      }
     }
+
+    setInitialForm();
   }, [initialData]);
 
   const handleChange = (field) => (e) => {
@@ -66,8 +70,7 @@ const SnippetForm = ({
     <div className="bg-black/20 backdrop-blur-sm z-10 fixed top-0 left-0 right-0 w-full h-full flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-3 border border-gray-200 rounded-4xl p-6 
-      bg-white w-full shadow max-w-[500px] lg:max-w-[50%] mx-auto"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-3 border border-gray-200 rounded-4xl p-6 bg-white w-full shadow max-w-[500px] lg:max-w-[50%] mx-auto"
       >
         <div className="lg:col-span-2 flex items-center justify-between">
           <h2 className="lg:col-span-1 text-xl lg:text-2xl font-semibold text-teal-800 font-mono">

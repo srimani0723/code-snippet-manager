@@ -12,13 +12,18 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    username: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
       minlength: 8,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const UserModel = mongoose.model("User", userSchema);

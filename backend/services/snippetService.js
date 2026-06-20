@@ -9,10 +9,10 @@ export const getSnippets = async (
   page = 1,
   limit = 10,
   sortBy = "createdAt",
-  sortOrder = "desc"
+  sortOrder = "desc",
 ) => {
   const snippets = await SnippetModel.find(filters)
-    .populate("user", "name")
+    .populate("user", "name email")
     .skip((page - 1) * limit)
     .limit(limit)
     .sort({ [sortBy]: sortOrder === "desc" ? -1 : 1 });
@@ -25,34 +25,78 @@ export const updateSnippet = async (id, userId, snippet) => {
   return await SnippetModel.findOneAndUpdate(
     { _id: id, user: userId },
     snippet,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 };
 
-export const deleteSnippet = async (id, userId) => {
-  return await SnippetModel.findOneAndDelete({ _id: id, user: userId });
+export const deleteSnippet = async (id, userId, userEmail, userName) => {
+  const deletedSnippet = await SnippetModel.findOneAndDelete({
+    _id: id,
+    user: userId,
+  });
+
+  if (!deletedSnippet) {
+    throw new Error("Snippet not deleted");
+  }
+
+  if (deletedSnippet.forkParent && deletedSnippet.forkParent.parentSnippetId) {
+    await SnippetModel.findOneAndUpdate(
+      { _id: deletedSnippet.forkParent.parentSnippetId },
+      { $pull: { forkUsers: { name: userName, email: userEmail } } },
+    );
+  }
+
+  return deletedSnippet;
 };
 
 // service
-export const forkSnippet = async (id, userId) => {
-  const snippet = await SnippetModel.findById(id);
-  if (!snippet) {
-    throw new Error("Snippet not found");
+export const forkSnippet = async (forkId, userId, userName, userEmail) => {
+  // here lean() changes mongodb bson to normal js object
+  const originalSnippet = await SnippetModel.findOneAndUpdate(
+    {
+      _id: forkId,
+      user: { $ne: userId },
+      "forkUsers.email": { $ne: userEmail },
+    },
+    {
+      $push: { forkUsers: { email: userEmail, name: userName } },
+    },
+    { new: false },
+  )
+    .populate("user", "name email")
+    .lean();
+
+  if (!originalSnippet) {
+    //exists checks only wheter it exists and returns boolean value
+    const exists = await SnippetModel.exists({ _id: forkId });
+    if (!exists) throw new Error("Snippet not found");
+    throw new Error(
+      "You Already forked the snippet or your own snippet can't be forked",
+    );
   }
 
-  const plain = snippet.toObject();
-  delete plain._id;
-  delete plain.createdAt;
-  delete plain.updatedAt;
-  delete plain.__v;
-  delete plain.user;
-  delete plain.forkParent;
+  const {
+    _id,
+    createdAt,
+    updatedAt,
+    __v,
+    user,
+    forkParent,
+    forkUsers,
+    ...cleanSnippetData
+  } = originalSnippet;
 
-  const forkedSnippet = await SnippetModel.create({
-    ...plain,
+  const newSnippet = {
+    ...cleanSnippetData,
     user: userId,
-    forkParent: snippet._id,
-  });
+    forkParent: {
+      parentSnippetId: _id,
+      parentUserDetails: { name: user.name, email: user.email },
+    },
+    forkUsers: [],
+  };
+
+  const forkedSnippet = await SnippetModel.create(newSnippet);
 
   return forkedSnippet;
 };

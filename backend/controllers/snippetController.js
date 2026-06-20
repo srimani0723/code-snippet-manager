@@ -77,7 +77,12 @@ export const updateSnippetController = async (req, res) => {
 
 export const deleteSnippetController = async (req, res) => {
   try {
-    const deleted = await deleteSnippet(req.params.id, req.user.id);
+    const deleted = await deleteSnippet(
+      req.params.id,
+      req.user.id,
+      req.user.email,
+      req.user.name,
+    );
     if (!deleted) {
       return res
         .status(404)
@@ -91,7 +96,15 @@ export const deleteSnippetController = async (req, res) => {
 
 export const forkSnippetController = async (req, res) => {
   try {
-    const snippet = await forkSnippet(req.params.id, req.user.id);
+    const snippet = await forkSnippet(
+      req.params.id,
+      req.user.id,
+      req.user.name,
+      req.user.email,
+    );
+    if (!snippet) {
+      return res.status(404).json({ message: "Snippet not found" });
+    }
     res.status(200).json({ snippet });
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });

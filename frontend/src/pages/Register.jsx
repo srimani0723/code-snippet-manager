@@ -1,39 +1,47 @@
 // src/pages/Register.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../auth/api";
-import useAuth from "../customHooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+
 import Spinner from "../components/Spinner";
+import useFetchMutation from "../hooks/useFetchMutation";
+import { setAuth } from "../reducers/authCheckSlice";
 
 const Register = () => {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUser } = useAuth();
+
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const registerMutate = useFetchMutation({
+    key: "register",
+    method: "POST",
+  });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    registerMutate.mutate(
+      { url: "/auth/register", data: form },
+      {
+        onSuccess: (data) => {
+          if (data?.user) {
+            toast.success("Registration successful!");
+            dispatch(setAuth(data));
+            navigate("/dashboard", { replace: true });
+          }
+        },
+        onError: (err) => {
+          toast.error(err.response?.data?.message || "Registration failed");
+        },
+      },
+    );
+  };
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setTimeout(async () => {
-      try {
-        const res = await api.post("/auth/register", form);
-        setIsAuthenticated(true);
-        setUser(res.data.user);
-        navigate("/snippets");
-      } catch (err) {
-        setError(err.response?.data?.message || "Registration failed");
-      } finally {
-        setLoading(false);
-      }
-    }, 500);
   };
 
   const onShowPassword = () => {
@@ -57,7 +65,7 @@ const Register = () => {
           Start saving and sharing your code
         </p>
 
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-3" onSubmit={onSubmit}>
           <input
             type="text"
             placeholder="Name"
@@ -92,14 +100,17 @@ const Register = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={registerMutate.loading}
             className="mt-1 px-3 py-2 bg-blue-600 text-white text-sm disabled:opacity-60 text-center rounded-full cursor-pointer hover:bg-blue-700 shadow-md"
           >
-            {loading ? <Spinner /> : "Register"}
+            {registerMutate.loading ? <Spinner /> : "Register"}
           </button>
-          {error && (
-            <p className="text-xs text-red-600 text-center mt-1">{error}</p>
-          )}
+          {/* {registerMutate.isError && (
+            <p className="text-xs text-red-600 text-center mt-1">
+              {registerMutate.error?.response?.data?.message ||
+                "Registration Failed!"}
+            </p>
+          )} */}
         </form>
         <p className="text-sm text-gray-600 mt-3 text-center font-mono font-semibold">
           Already have an account?{" "}

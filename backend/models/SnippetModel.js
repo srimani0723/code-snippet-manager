@@ -31,12 +31,32 @@ const snippetSchema = new mongoose.Schema(
       required: true,
     },
     forkParent: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Snippet",
+      type: {
+        parentSnippetId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Snippet",
+        },
+        parentUserDetails: {
+          name: { type: String, ref: "User" },
+          email: { type: String, ref: "User" },
+        },
+      },
       default: null,
     },
+    forkUsers: {
+      type: [
+        {
+          email: {
+            type: String,
+            ref: "User",
+          },
+          name: { type: String, ref: "User" },
+        },
+      ],
+      default: [],
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const SnippetModel = mongoose.model("Snippet", snippetSchema);
