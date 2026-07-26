@@ -1,6 +1,7 @@
 import {
   createSnippet,
   getSnippets,
+  getSnippet,
   updateSnippet,
   deleteSnippet,
   forkSnippet,
@@ -56,6 +57,18 @@ export const getSnippetsController = async (req, res) => {
     );
 
     res.status(200).json({ snippets, total, pages });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getSnippetController = async (req, res) => {
+  try {
+    const snippet = await getSnippet(req.params.id);
+    if (!snippet) {
+      return res.status(404).json({ message: "Snippet not found" });
+    }
+    res.status(200).json({ snippet });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

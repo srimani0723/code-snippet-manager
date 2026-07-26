@@ -10,6 +10,7 @@ import { IoMdColorPalette } from "react-icons/io";
 import useAuth from "../hooks/useAuth";
 import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
+import Footer from "../components/Footer";
 
 const sampleCode = `function debounce(func, delay) {
   let timer;
@@ -440,62 +441,65 @@ export const greet = (name: string) =>
   );
 
   return (
-    <section className="p-4 w-full flex flex-col gap-4 lg:max-w-[90%] mx-auto">
-      {introPart()}
-      {codeSnippet()}
-      {featuresPart()}
+    <>
+      <section className="p-4 w-full flex flex-col gap-4 lg:max-w-[90%] mx-auto">
+        {introPart()}
+        {codeSnippet()}
+        {featuresPart()}
 
-      {/* Get Started CTA banner */}
-      <div
-        className={`flex flex-col md:flex-row items-center gap-4 my-5 p-8 rounded-4xl border-2 shadow-md transition-all duration-200 ${
-          isDark
-            ? "bg-linear-to-r from-sky-950/20 via-teal-950/20 to-orange-950/20 border-primary-border text-primary-text"
-            : "bg-linear-to-r from-sky-100 via-teal-100 to-orange-100 border-gray-300"
-        }`}
-      >
-        <div className="flex flex-col items-start gap-4 flex-1">
-          <h1
-            className={`text-3xl font-semibold md:text-4xl lg:max-w-[70%] ${
-              isDark ? "text-white" : "text-gray-800"
-            }`}
-          >
-            Ready to{" "}
-            <span className="bg-linear-to-r from-sky-600 via-teal-500 to-red-600 bg-clip-text text-transparent">
-              snip
-            </span>{" "}
-            something?
-          </h1>
-          <p
-            className={`text-md md:text-lg font-semibold ${
-              isDark ? "text-primary-text/60" : "text-gray-500"
-            }`}
-          >
-            Sign in once and start building your library. It's free, and your
-            private snippets stay private.
-          </p>
+        {/* Get Started CTA banner */}
+        <div
+          className={`flex flex-col md:flex-row items-center gap-4 my-5 p-8 rounded-4xl border-2 shadow-md transition-all duration-200 ${
+            isDark
+              ? "bg-linear-to-r from-sky-950/20 via-teal-950/20 to-orange-950/20 border-primary-border text-primary-text"
+              : "bg-linear-to-r from-sky-100 via-teal-100 to-orange-100 border-gray-300"
+          }`}
+        >
+          <div className="flex flex-col items-start gap-4 flex-1">
+            <h1
+              className={`text-3xl font-semibold md:text-4xl lg:max-w-[70%] ${
+                isDark ? "text-white" : "text-gray-800"
+              }`}
+            >
+              Ready to{" "}
+              <span className="bg-linear-to-r from-sky-600 via-teal-500 to-red-600 bg-clip-text text-transparent">
+                snip
+              </span>{" "}
+              something?
+            </h1>
+            <p
+              className={`text-md md:text-lg font-semibold ${
+                isDark ? "text-primary-text/60" : "text-gray-500"
+              }`}
+            >
+              Sign in once and start building your library. It's free, and your
+              private snippets stay private.
+            </p>
+          </div>
+
+          <div className="flex items-center">
+            <button
+              className="px-5 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold cursor-pointer hover:bg-blue-600 active:scale-95 transition-all duration-150 shadow-md"
+              onClick={() => navigate("/login")}
+            >
+              Get Started
+            </button>
+
+            <button
+              className={`px-5 py-2 rounded-full text-sm font-semibold cursor-pointer shadow ml-2 active:scale-95 transition-all duration-150 ${
+                isDark
+                  ? "bg-primary-bg3 text-white hover:bg-primary-bg4 border border-primary-border"
+                  : "bg-white text-gray-800 hover:bg-gray-50"
+              }`}
+              onClick={() => navigate("/snippets")}
+            >
+              Browse gallery
+            </button>
+          </div>
         </div>
-
-        <div className="flex items-center">
-          <button
-            className="px-5 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold cursor-pointer hover:bg-blue-600 active:scale-95 transition-all duration-150 shadow-md"
-            onClick={() => navigate("/login")}
-          >
-            Get Started
-          </button>
-
-          <button
-            className={`px-5 py-2 rounded-full text-sm font-semibold cursor-pointer shadow ml-2 active:scale-95 transition-all duration-150 ${
-              isDark
-                ? "bg-primary-bg3 text-white hover:bg-primary-bg4 border border-primary-border"
-                : "bg-white text-gray-800 hover:bg-gray-50"
-            }`}
-            onClick={() => navigate("/snippets")}
-          >
-            Browse gallery
-          </button>
-        </div>
-      </div>
-    </section>
+      </section>
+      <Footer />
+    </>
   );
 };
 

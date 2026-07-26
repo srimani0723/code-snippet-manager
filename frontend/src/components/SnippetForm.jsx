@@ -53,6 +53,9 @@ const SnippetForm = ({
     setInitialForm();
   }, [initialData]);
 
+  const id = initialData?._id;
+  console.log(id, initialData);
+
   const handleChange = (field) => (e) => {
     const value = field === "isPublic" ? e.target.checked : e.target.value;
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -98,14 +101,16 @@ const SnippetForm = ({
               isDark ? "text-teal-400" : "text-teal-800"
             }`}
           >
-            {initialData ? "Edit Snippet" : "New Snippet"}
+            {id ? "Edit Snippet" : "New Snippet"}
           </h2>
 
           <button
             type="button"
             onClick={onCancel}
             className={`lg:grid-col-2 cursor-pointer p-1 text-3xl hover:scale-120 transition-transform duration-200 ${
-              isDark ? "text-red-400 hover:text-red-300" : "text-red-800 hover:text-red-900"
+              isDark
+                ? "text-red-400 hover:text-red-300"
+                : "text-red-800 hover:text-red-900"
             }`}
           >
             <IoCloseCircleOutline />
@@ -203,10 +208,10 @@ const SnippetForm = ({
             disabled={submitting}
           >
             {submitting
-              ? initialData
+              ? id
                 ? "Updating..."
                 : "Creating..."
-              : initialData
+              : id
                 ? "Update"
                 : "Create"}
           </button>

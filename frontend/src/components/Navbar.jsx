@@ -9,6 +9,7 @@ import useFetchMutation from "../hooks/useFetchMutation";
 import { toast } from "react-toastify";
 import ThemeContext from "../contexts/ThemeContext";
 import { FaSun, FaMoon } from "react-icons/fa6";
+import { FaTerminal } from "react-icons/fa";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Navbar = () => {
     <button
       type="button"
       onClick={toggleTheme}
-      className={`hover:scale-110 transition-all duration-100 cursor-pointer rounded-full p-1 ${theme === themes.DARK ? "bg-primary-border " : "bg-gray-300 "} ${extraClass}`}
+      className={`transition-all duration-100 cursor-pointer rounded-full p-1 ${theme === themes.DARK ? "bg-primary-border " : "bg-gray-300 "} ${extraClass}`}
     >
       {theme === themes.DARK ? (
         <FaSun className="text-xl text-yellow-200" />
@@ -71,16 +72,24 @@ const Navbar = () => {
 
   return (
     <header
-      className={`flex items-center px-4 py-3 backdrop-blur-md sticky w-full top-0 z-10  flex-col md:flex-row ${theme === themes.DARK ? "bg-primary-bg2 border-b border-primary-border shadow-md/5 " : "bg-white/60 border-b border-gray-300 shadow-md/5 "}`}
+      className={`flex items-center px-4 py-3 backdrop-blur-md sticky w-full top-0 z-10  flex-col md:flex-row ${theme === themes.DARK ? "bg-primary-bg2 border-b border-primary-border shadow-md/5 " : "bg-white/60 border-b border-gray-300 shadow-md/5"}`}
     >
       {/* Logo */}
       <div className="flex items-center justify-between w-full md:w-fit">
         <NavLink
           to="/"
-          className="text-3xl text-teal-500 flex items-center gap-2 font-semibold"
+          className="text-3xl flex items-center gap-2 font-semibold"
         >
-          <FaCode />
+          {/* <p
+            className={`text-3xl rounded-lg px-3 pb-2 pt-1 font-mono font-bold ${theme === themes.DARK ? "text-gray-100  bg-primary-bg3" : "text-teal-800  bg-emerald-200"}`}
+          >
+            &gt;<span className="text-[20px]">_</span>
+          </p> */}
 
+          <FaTerminal
+            className={`text-[45px] p-2.5 px-3 rounded-lg font-mono font-bold ${theme === themes.DARK ? "text-gray-100  bg-primary-bg3" : "text-teal-800  bg-emerald-200"}`}
+            fontWeight="bold"
+          />
           <span
             className={`font-semibold text-xs lg:text-[15px] font-mono ${theme === themes.DARK ? "text-primary-text " : "text-gray-800 "}`}
           >
@@ -117,6 +126,12 @@ const Navbar = () => {
           <NavLink to="/snippets" className={"w-full md:w-fit"}>
             <li className={linkClass("/snippets")} onClick={toggleNavbar}>
               Explore
+            </li>
+          </NavLink>
+
+          <NavLink to="/code-editor/new" className={"w-full md:w-fit"}>
+            <li className={linkClass("/code-editor")} onClick={toggleNavbar}>
+              Playground
             </li>
           </NavLink>
 

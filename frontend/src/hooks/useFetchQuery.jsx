@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "../auth/fetcher";
 
-const useFetchQuery = ({ key, url, method = "GET" }, headers) => {
+const useFetchQuery = ({ key, url, method = "GET", ...options }, headers) => {
   return useQuery({
     queryKey: [key],
     queryFn: () => fetcher({ url, method, headers }),
@@ -9,6 +9,7 @@ const useFetchQuery = ({ key, url, method = "GET" }, headers) => {
     select: (data) => {
       return data;
     },
+    ...options,
   });
 };
 

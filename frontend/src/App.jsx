@@ -9,10 +9,10 @@ import Register from "./pages/Register";
 import Snippets from "./pages/Snippets";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/protectedRoute";
-import Footer from "./components/Footer";
 import useAuth from "./hooks/useAuth";
 import { toast } from "react-toastify";
 import ThemeContext from "./contexts/ThemeContext";
+import CodeEditor from "./pages/CodeEditor";
 
 function App() {
   const { checkUser } = useAuth();
@@ -40,12 +40,15 @@ function App() {
       className={`min-h-screen flex flex-col w-full relative ${theme === themes.LIGHT ? "bg-orange-50" : "bg-primary-bg1"}`}
     >
       <Navbar />
-      <main className="min-h-[80vh]">
+      <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/snippets" element={<Snippets />} />
+
+          <Route path="/code-editor/new" element={<CodeEditor />} />
+          <Route path="/code-editor/:id" element={<CodeEditor />} />
 
           <Route
             path="/dashboard"
@@ -59,7 +62,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 }

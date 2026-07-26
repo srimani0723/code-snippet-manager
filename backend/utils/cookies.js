@@ -3,6 +3,6 @@ export const setCookie = (res, token) => {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: 1 * 60 * 60 * 1000,
+    maxAge: 48 * 60 * 60 * 1000, // 48 hours in milliseconds
   });
 };

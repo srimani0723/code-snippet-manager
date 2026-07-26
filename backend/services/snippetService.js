@@ -21,6 +21,10 @@ export const getSnippets = async (
   return { snippets, total, pages: Math.ceil(total / limit) };
 };
 
+export const getSnippet = async (id) => {
+  return await SnippetModel.findById(id);
+};
+
 export const updateSnippet = async (id, userId, snippet) => {
   return await SnippetModel.findOneAndUpdate(
     { _id: id, user: userId },

@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import useFetchMutation from "../hooks/useFetchMutation";
 import ConfirmToast from "../components/ConfirmToast";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaTerminal } from "react-icons/fa";
 
 const languageMap = {
   javascript: "javascript",
@@ -33,6 +35,7 @@ const SnippetCard = ({
   userSnippet,
   refreshSnippets,
 }) => {
+  const navigate = useNavigate();
   const { theme, themes } = useContext(ThemeContext);
   const deleteSnippetMutation = useFetchMutation({
     key: "deleteSnippet",
@@ -254,11 +257,11 @@ const SnippetCard = ({
           </p>
         )}
 
-        <div className="flex gap-3 justify-center items-center ml-auto">
+        <div className="flex gap-3 justify-center w-full items-center">
           {onClickFork && (
             <button
               onClick={onClickFork}
-              className={`whitespace-nowrap flex items-center gap-1 text-[15px] font-semibold cursor-pointer px-2 py-1 rounded-full ${
+              className={`whitespace-nowrap flex items-center gap-1 text-[15px] font-semibold cursor-pointer px-2 py-1 rounded-full ml-auto ${
                 theme === themes.DARK
                   ? "text-blue-400 hover:text-white hover:bg-primary-bg3"
                   : "text-blue-600 hover:text-gray-700 hover:bg-gray-100"
@@ -278,6 +281,23 @@ const SnippetCard = ({
               ) : null}
             </button>
           )}
+
+          {userSnippet && (language === "javascript" || language === "js") && (
+            <button
+              onClick={() => {
+                navigate(`/code-editor/${snippet._id}`);
+              }}
+              className={`flex items-center gap-1 font-semibold text-[15px] cursor-pointer px-3 py-1 transition-all duration-200 rounded-full mr-auto ${
+                theme === themes.DARK
+                  ? "text-white hover:bg-primary-bg2 hover:text-white border border-gray-600"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-800 border border-gray-400"
+              }`}
+            >
+              <FaTerminal className="text-lg" />
+              open
+            </button>
+          )}
+
           {userSnippet && (
             <button
               onClick={onClickEdit}
@@ -291,6 +311,7 @@ const SnippetCard = ({
               Edit
             </button>
           )}
+
           {userSnippet && (
             <button
               onClick={() => onDelete(snippet._id)}
