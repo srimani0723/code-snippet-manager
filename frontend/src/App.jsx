@@ -47,8 +47,22 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/snippets" element={<Snippets />} />
 
-          <Route path="/code-editor/new" element={<CodeEditor />} />
-          <Route path="/code-editor/:id" element={<CodeEditor />} />
+          <Route
+            path="/code-editor/new"
+            element={
+              <ProtectedRoute>
+                <CodeEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/code-editor/:id"
+            element={
+              <ProtectedRoute>
+                <CodeEditor />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/dashboard"

@@ -129,11 +129,13 @@ const Navbar = () => {
             </li>
           </NavLink>
 
-          <NavLink to="/code-editor/new" className={"w-full md:w-fit"}>
-            <li className={linkClass("/code-editor")} onClick={toggleNavbar}>
-              Playground
-            </li>
-          </NavLink>
+          {isAuthenticated && !loading && (
+            <NavLink to="/code-editor/new" className={"w-full md:w-fit"}>
+              <li className={linkClass("/code-editor")} onClick={toggleNavbar}>
+                Playground
+              </li>
+            </NavLink>
+          )}
 
           {isAuthenticated && !loading && (
             <NavLink to="/dashboard" className={"w-full md:w-fit"}>
