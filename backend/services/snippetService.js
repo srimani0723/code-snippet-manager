@@ -22,7 +22,7 @@ export const getSnippets = async (
 };
 
 export const getSnippet = async (id) => {
-  return await SnippetModel.findById(id);
+  return await SnippetModel.findById(id).populate("user", "name email");
 };
 
 export const updateSnippet = async (id, userId, snippet) => {

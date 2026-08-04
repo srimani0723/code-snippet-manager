@@ -127,7 +127,11 @@ const Home = () => {
         showLineNumbers
         wrapLines={true}
         lineProps={{
-          style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+          style: {
+            wordBreak: "normal",
+            overflowWrap: "anywhere",
+            whiteSpace: "pre-wrap",
+          },
         }}
         style={isDark ? dark : undefined}
         customStyle={{
@@ -202,7 +206,11 @@ const Home = () => {
             language="javascript"
             wrapLines={true}
             lineProps={{
-              style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+              style: {
+                wordBreak: "normal",
+                overflowWrap: "anywhere",
+                whiteSpace: "pre-wrap",
+              },
             }}
             style={isDark ? dark : undefined}
             customStyle={{
@@ -440,12 +448,99 @@ export const greet = (name: string) =>
     </>
   );
 
+  const editorShowcasePart = () => (
+    <div
+      className={`flex flex-col lg:flex-row items-center gap-8 my-8 p-8 rounded-4xl border transition-all duration-200 ${
+        isDark
+          ? "bg-primary-bg4 border-primary-border text-primary-text"
+          : "bg-white border-gray-300 text-gray-800"
+      }`}
+    >
+      <div className="flex flex-col items-start gap-4 flex-1">
+        <span className="text-xs uppercase tracking-wider font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/10 dark:text-blue-400">
+          Powerful Sandbox
+        </span>
+        <h2
+          className={`text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight ${
+            isDark ? "text-white" : "text-gray-900"
+          }`}
+        >
+          Interactive Code Editor
+        </h2>
+        <p
+          className={`text-sm md:text-md font-semibold leading-relaxed ${
+            isDark ? "text-primary-text/75" : "text-gray-600"
+          }`}
+        >
+          Don't just look at code—play with it. Our built-in online editor
+          allows you to write, edit, and test snippets in real-time. Change
+          variables, experiment with parameters, and run JavaScript code
+          instantly.
+        </p>
+
+        <ul className="flex flex-col gap-2.5 text-xs md:text-sm font-semibold opacity-85 mt-2">
+          <li className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+            Live code execution with instant web console outputs
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+            One-click restore button to reset code to its original version
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+            Vibrant, high-fidelity light and dark editor syntax highlighting
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+            Javascript code editor and other language coming soon...
+          </li>
+        </ul>
+      </div>
+
+      <div className="flex-1 w-full max-w-[550px] border border-gray-300 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg bg-[#1e1e1e] text-white">
+        <div className="flex items-center justify-between bg-[#252526] px-4 py-2 border-b border-gray-700">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+            <span className="text-xs text-gray-400 font-mono ml-2">
+              editor_playground.js
+            </span>
+          </div>
+          <span className="text-xs px-2 py-0.5 rounded bg-blue-600/30 text-blue-400 font-mono border border-blue-500/20">
+            JS Sandbox
+          </span>
+        </div>
+        <div className="p-4 font-mono text-xs md:text-sm leading-relaxed overflow-x-auto select-none bg-[#1e1e1e]">
+          <span className="text-blue-400">const</span>{" "}
+          <span className="text-yellow-300">helloWorld</span> = () =&gt; &#123;
+          <br />
+          &nbsp;&nbsp;
+          <span className="text-green-400">
+            // Edit and run your code on the fly!
+          </span>
+          <br />
+          &nbsp;&nbsp;<span className="text-blue-400">console</span>.
+          <span className="text-yellow-300">log</span>(
+          <span className="text-orange-300">
+            "Interactive Editor Playground Live!"
+          </span>
+          );
+          <br />
+          &#125;;
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <section className="p-4 w-full flex flex-col gap-4 lg:max-w-[90%] mx-auto">
         {introPart()}
         {codeSnippet()}
         {featuresPart()}
+        {editorShowcasePart()}
 
         {/* Get Started CTA banner */}
         <div

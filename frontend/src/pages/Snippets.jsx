@@ -10,7 +10,7 @@ import useAuth from "../hooks/useAuth";
 import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
 
-import SnippetCard from "../components/SnippetCard";
+import ExploreSnippetCard from "../components/ExploreSnippetCard";
 import Filters from "../components/Filters";
 import Spinner from "../components/Spinner";
 
@@ -134,11 +134,9 @@ const Snippets = () => {
       ) : (
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 w-full mx-auto">
           {snippets.map((snip) => (
-            <SnippetCard
+            <ExploreSnippetCard
               key={snip._id}
               snippet={snip}
-              onDelete={null} // cannot delete here
-              onClickEdit={null} // cannot edit here
               onClickFork={() => handleFork(snip._id)}
             />
           ))}

@@ -140,7 +140,7 @@ const CodeEditor = ({ id }) => {
   }
 
   return (
-    <div className="grid grid-cols-5 grid-rows-[auto_1fr] md:grid-rows-1 w-full p-3 gap-3 h-[88vh] border-box">
+    <div className="grid grid-cols-5 grid-rows-[auto_1fr] md:grid-rows-1 w-full max-w-[1200px] lg:max-w-[90%] mx-auto p-3 gap-3 h-[85vh] md:h-[88vh] border-box">
       {/* small device switch buttons */}
       <div className="col-span-5 flex items-center justify-center gap-2 md:hidden">
         <div className="flex items-center justify-between h-fit rounded-xl">
@@ -163,7 +163,7 @@ const CodeEditor = ({ id }) => {
 
       {/* editor section */}
       <div
-        className={` ${activeTab === "code" ? "block" : "hidden md:flex"} col-span-5 md:col-span-3 w-full flex flex-col items-start h-full border 
+        className={` ${activeTab === "code" ? "flex" : "hidden md:flex"} col-span-5 md:col-span-3 w-full flex flex-col h-full min-h-0 border 
           ${isDark ? "text-white bg-primary-bg2 border-gray-700" : "text-gray-800 bg-white border-gray-300"} rounded-xl shadow-md/5 `}
       >
         <div
@@ -190,36 +190,37 @@ const CodeEditor = ({ id }) => {
             </button>
           </div>
         </div>
-        <div className="flex-1 flex flex-col w-full">
-          <Editor
-            height="100%"
-            width="100%"
-            language="javascript"
-            theme="vs-dark"
-            defaultValue="// Write your code here"
-            value={code}
-            onChange={handleCodeWritingChange}
-            options={{
-              automaticLayout: true,
-              scrollBeyondLastLine: false,
-              lineNumbersMinChars: 3,
-              glyphMargin: false,
-              folding: false,
-              lineDecorationsWidth: 10,
-              lineHeight: 25,
-              fontSize: 16,
-              minimap: {
-                enabled: false,
-              },
-            }}
-          />
+        <div className="flex-1 flex flex-col w-full min-h-0">
+          <div className="flex-grow w-full min-h-0 relative">
+            <Editor
+              height="100%"
+              width="100%"
+              language="javascript"
+              theme="vs-dark"
+              value={code}
+              onChange={handleCodeWritingChange}
+              options={{
+                automaticLayout: true,
+                scrollBeyondLastLine: false,
+                lineNumbersMinChars: 3,
+                glyphMargin: false,
+                folding: false,
+                lineDecorationsWidth: 10,
+                lineHeight: 22,
+                fontSize: 15,
+                minimap: {
+                  enabled: false,
+                },
+              }}
+            />
+          </div>
           <button
-            className="text-sm bg-sky-600 hover:bg-sky-700 text-white font-bold self-end px-3 py-1 m-2 rounded-full flex items-center cursor-pointer disabled:opacity-50"
+            className="text-sm bg-sky-600 hover:bg-sky-700 text-white font-bold self-end px-4 py-1.5 m-2 rounded-full flex items-center cursor-pointer disabled:opacity-50 transition-colors"
             type="button"
             onClick={handleRunCode}
             disabled={codeMutation.isLoading}
           >
-            <FaPlay className="mr-2" />
+            <FaPlay className="mr-2 text-xs" />
             {codeMutation.isLoading ? "Running..." : "Run Code"}
           </button>
         </div>
@@ -227,7 +228,7 @@ const CodeEditor = ({ id }) => {
 
       {/* output section */}
       <div
-        className={`${activeTab === "output" ? "block" : "hidden md:flex"} col-span-5 md:col-span-2 w-full flex flex-col items-start h-full border 
+        className={`${activeTab === "output" ? "flex" : "hidden md:flex"} col-span-5 md:col-span-2 w-full flex flex-col h-full min-h-0 border 
           ${isDark ? "text-white bg-primary-bg2 border-gray-700" : "text-gray-800 bg-white border-gray-300"} rounded-xl shadow-md/5 `}
       >
         <p
@@ -235,16 +236,19 @@ const CodeEditor = ({ id }) => {
         >
           Output
         </p>
-        <div className="flex-1 flex flex-col w-full bg-primary-bg2 h-full rounded-b-xl overflow-y-auto">
-          {output &&
+        <div className="flex-1 flex flex-col w-full bg-[#0d1117] h-full rounded-b-xl overflow-y-auto p-4 font-mono text-sm gap-1.5 border-t border-gray-700/30">
+          {output ? (
             output.split("\n").map((line, idx) => (
               <div
                 key={idx}
-                className="border-b border-gray-600 bg-primary-bg3/30 py-2 px-3 text-orange-200"
+                className="font-mono text-emerald-400 whitespace-pre-wrap leading-relaxed"
               >
-                {line}
+                &gt; {line}
               </div>
-            ))}
+            ))
+          ) : (
+            <span className="text-gray-500 italic text-xs">Console is empty. Click "Run Code" to execute.</span>
+          )}
         </div>
       </div>
 

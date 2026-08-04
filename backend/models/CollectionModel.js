@@ -8,7 +8,7 @@ const collectionSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: "collection description",
+      default: "collection description...",
     },
     snippets: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Snippet" }],
@@ -19,7 +19,7 @@ const collectionSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const CollectionModel = mongoose.model("Collection", collectionSchema);
