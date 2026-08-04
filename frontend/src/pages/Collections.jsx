@@ -57,7 +57,13 @@ const Collections = () => {
     );
 
   if (isError) {
-    toast.error(`Error fetching collections: ${error.message}`);
+    return (
+      <p className="text-muted-foreground flex min-h-[90vh] items-center justify-center text-center font-mono text-lg font-semibold">
+        {error?.response?.status === 401
+          ? "Your session expired. Please log in again."
+          : "Unable to load collections right now."}
+      </p>
+    );
   }
 
   if (data?.collections?.length === 0)
@@ -103,7 +109,7 @@ const Collections = () => {
       <div
         className={`flex h-full w-full flex-row flex-wrap gap-4 rounded-4xl ${isDark ? "" : ""}`}
       >
-        {data.collections.map((collection) => (
+        {data?.collections?.map((collection) => (
           <div
             key={collection._id}
             className={`${isDark ? "text-gray-300" : "text-gray-700"} group group relative cursor-pointer p-4`}

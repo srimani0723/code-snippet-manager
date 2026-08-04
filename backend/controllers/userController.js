@@ -1,5 +1,5 @@
 import { CreateUser, FindUserByEmail } from "../services/userSevices.js";
-import { setCookie } from "../utils/cookies.js";
+import { clearAuthCookie, setCookie } from "../utils/cookies.js";
 import { comparePassword, hashPassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
 
@@ -87,11 +87,7 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-  });
+  clearAuthCookie(res);
   res.status(200).json({
     message: "User logged out successfully",
   });

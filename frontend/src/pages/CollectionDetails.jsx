@@ -58,7 +58,13 @@ const CollectionDetails = () => {
     );
 
   if (isError) {
-    toast.error(`Error fetching collections: ${error.message}`);
+    return (
+      <p className="text-muted-foreground flex min-h-[90vh] items-center justify-center text-center font-mono text-lg font-semibold">
+        {error?.response?.status === 401
+          ? "Your session expired. Please log in again."
+          : "Unable to load collection details right now."}
+      </p>
+    );
   }
 
   return (
@@ -67,7 +73,7 @@ const CollectionDetails = () => {
     >
       {toggleEditForm && (
         <CollectionForm
-          initialData={data.collection}
+          initialData={data?.collection}
           onSubmit={handleFormSubmit}
           onCancel={handleEditFormToggle}
         />
@@ -102,17 +108,17 @@ const CollectionDetails = () => {
         <h1
           className={`text-2xl font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}
         >
-          {data.collection.name}
+          {data?.collection?.name}
         </h1>
 
         <p
           className={`font-mono text-lg ${isDark ? "text-primary-text" : "text-gray-800"}`}
         >
-          {data.collection.description}
+          {data?.collection?.description}
         </p>
 
         <p className={`font-mono text-sm font-semibold text-teal-500`}>
-          {data.collection.createdAt &&
+          {data?.collection?.createdAt &&
             `${new Date(data.collection.createdAt).toLocaleString()}`}
         </p>
       </div>
@@ -128,7 +134,7 @@ const CollectionDetails = () => {
       />
 
       {/* snippets list */}
-      {data.collection.snippets.length > 0 ? (
+      {data?.collection?.snippets?.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.collection.snippets.map((snippet) => (
             <UserSnippetCard key={snippet._id} snippet={snippet} />
