@@ -1,101 +1,89 @@
-# 🚀 SnipSpace - Modern Code Snippet Manager & Playground
+# Code Snippet Manager
 
-SnipSpace is a feature-rich, high-performance web application designed for developers to create, organize, execute, and share code snippets. Equipped with an interactive editor sandbox and a secure execution engine, SnipSpace makes snippet management seamless and developer-friendly.
+A MERN stack app for saving, organizing, browsing, and reusing code snippets. It supports private and public snippets, collections, search and filtering, snippet forking, and a browser-based editor for creating or editing code.
 
----
+## Features
 
-## 🎨 Tech Stack
+- Authentication with register, login, logout, and session verification.
+- Create, edit, delete, and view snippets.
+- Mark snippets as public or private.
+- Explore public snippets from other users and fork them into your own dashboard.
+- Organize snippets into collections and sync snippets between snippets and collections.
+- Search and filter snippets by title, language, description, or tags.
+- Monaco-based code editor for writing snippets in the browser.
+- Theme toggle for light and dark mode.
+- Backend code execution through a sandboxed compiler service using `vm2`.
 
-| Technology         | Purpose               | Logo / Shield                                                                                                                     |
-| :----------------- | :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| **MongoDB**        | Database              | ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)                   |
-| **Express.js**     | Backend Framework     | ![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=white)             |
-| **React**          | Frontend Framework    | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)                     |
-| **Node.js**        | Runtime Environment   | ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)                           |
-| **Tailwind CSS**   | Styles & Layouts      | ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind_css&logoColor=white)      |
-| **React Query**    | State & Data Fetching | ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)         |
-| **Monaco Editor**  | Code Editor Component | ![Monaco Editor](https://img.shields.io/badge/Monaco%20Editor-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white) |
-| **JSON Web Token** | Authentication Token  | ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)                                       |
+## Tech Stack
 
----
+| Technology                                                                                                                                        | Purpose                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />                          | Database                              |
+| <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />                    | Backend API                           |
+| <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />                               | Frontend UI                           |
+| <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />                          | Runtime                               |
+| <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />                                   | Frontend dev server and build tooling |
+| <img src="https://img.shields.io/badge/Redux%20Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux Toolkit" />              | App state                             |
+| <img src="https://img.shields.io/badge/React%20Query-FF4154?style=for-the-badge&logo=tanstack&logoColor=white" alt="React Query" />               | Server state and mutations            |
+| <img src="https://img.shields.io/badge/Monaco%20Editor-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Monaco Editor" /> | In-browser code editing               |
+| <img src="https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />          | Styling                               |
+| <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT" />                            | Authentication                        |
 
-## ✨ Features
+## Project Structure
 
-- **💻 Real-Time Interactive Playground:** Live Monaco Editor environment with standard JS capabilities to write and play with Javascript code directly on the browser.
-- **⚡ Secure Server-Side Execution:** Executes user code safely in a sandbox on the backend using `vm2`, returning compilation outputs and runtime errors instantly.
-- **📂 Full CRUD Operations:** Create, retrieve, update, and delete snippets. Easily manage snippet configuration properties like Title, Description, Tags, Language, and Visibility.
-- **👥 Collaboration & Forking:** Discover public snippets created by other developers and fork them to your workspace to build upon existing solutions.
-- **🔒 Secure 48-Hour Auth Session:** Fully secured JWT sessions stored in HttpOnly cookies, protecting your private library for up to 48 hours.
-- **🌗 Dynamic Theme System:** Seamless light/dark mode support with sleek, responsive designs and curated color palettes.
-- **🏷️ Smart Tags & Search:** Filter and look up snippets instantly using titles, descriptions, or specific language tags.
+- `backend/` contains the Express API, MongoDB models, controllers, services, and auth utilities.
+- `frontend/` contains the React app, pages, reusable components, hooks, and state management.
 
----
+## Prerequisites
 
-## 💡 Advantages
+- Node.js 16 or newer
+- MongoDB running locally or a hosted MongoDB connection string
 
-1. **Boost Productivity:** Keep your most-used boilerplates and helper functions in one dashboard. No more searching through old repositories or folders.
-2. **Experiment Instantly:** Zero local setup needed to test Javascript snippets. Open the Playground, type, and click **Run Code**.
-3. **Collaboration Friendly:** Share code patterns with teammates by turning public snippet access on, or fork public templates to customize them.
-4. **Enhanced Security:** Private snippets stay strictly confidential under secure routes, while credentials are safe with hashed passwords and secure authentication cookies.
+## Setup
 
----
-
-## 🛠️ Installation & Setup
-
-Follow these steps to set up SnipSpace locally:
-
-### 1. Prerequisites
-
-Ensure you have [Node.js](https://nodejs.org/) (v16+) and [MongoDB](https://www.mongodb.com/) installed on your machine.
-
-### 2. Clone the Repository
+### Backend
 
 ```bash
-git clone https://github.com/<your-username>/code-snippet-manager.git
-cd code-snippet-manager
+cd backend
+npm install
 ```
 
-### 3. Backend Setup
+Create a `.env` file in `backend/`:
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create a `.env` file and configure your environment variables:
-   ```env
-   PORT=5000
-   MONGO_URI=mongodb://localhost:27017/snipspace
-   JWT_SECRET=your_super_secret_key
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/code-snippet-manager
+JWT_SECRET=your_super_secret_key
+FRONTEND_URL=http://localhost:5173
+```
 
-### 4. Frontend Setup
+Start the API:
 
-1. Open a new terminal and navigate to the frontend directory:
-   ```bash
-   cd ../frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+```bash
+npm run dev
+```
 
----
+### Frontend
 
-## 🔒 Security Best Practices
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Passwords are encrypted using **bcrypt** before database insertion.
-- Session tokens are verified through **JWT** and transferred using **HttpOnly cookies** (with `Secure` and `SameSite: lax` options enabled).
-- Executing custom user script files is strictly isolated using backend sandbox environments.
+Open the app at [http://localhost:5173](http://localhost:5173).
+
+## API Overview
+
+The backend exposes these routes under `/api`:
+
+- `/api/auth` for register, login, logout, and session check
+- `/api/snippets` for snippet CRUD and fork actions
+- `/api/collections` for collection CRUD and snippet-collection syncing
+- `/api/compiler` for running code in the backend sandbox
+
+## Notes
+
+- Auth uses HTTP-only cookies and JWT.
+- Passwords are hashed with `bcrypt`.
+- Public snippets can be forked, but private snippets stay in the owner dashboard.

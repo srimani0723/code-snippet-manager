@@ -5,7 +5,20 @@ import {
   updateCollection,
   deleteCollection,
   updateSnippetCollections,
+  updateCollectionSnippets,
 } from "../services/collectionService.js";
+
+export const updateCollectionSnippetsController = async (req, res) => {
+  try {
+    const collection = await updateCollectionSnippets(
+      req.params.collectionId,
+      req.body.snippetIds,
+    );
+    res.status(200).json({ collection });
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: error });
+  }
+};
 
 export const updateSnippetCollectionController = async (req, res) => {
   try {

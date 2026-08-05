@@ -10,13 +10,19 @@ import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import UserSnippetCard from "../components/UserSnippetCard";
 import CollectionForm from "../components/CollectionForm";
+import ConfirmToast from "../components/ConfirmToast";
+import ToggleCollectionSnippetsForm from "../components/ToggleCollectionSnippetsForm";
 
 import { MdOutlineEdit } from "react-icons/md";
 import { IoMdArrowBack } from "react-icons/io";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { AiOutlineSnippets } from "react-icons/ai";
 
 const CollectionDetails = () => {
   const navigate = useNavigate();
   const [toggleEditForm, setToggleEditForm] = useState(false);
+  const [toggleCollectionSnippetsForm, setToggleCollectionSnippetsForm] =
+    useState(false);
   const { id } = useParams();
 
   const { theme, themes } = useContext(ThemeContext);
@@ -32,6 +38,33 @@ const CollectionDetails = () => {
     method: "PUT",
   });
 
+  const deleteCollectionMutation = useFetchMutation({
+    key: "deleteCollection",
+    method: "DELETE",
+  });
+
+  const handleDeleteFormToggle = () => {
+    ConfirmToast("Are you sure you want to delete this collection?", () => {
+      (deleteCollectionMutation.mutate(
+        { url: `/collections/${id}` },
+        {
+          onSuccess: () => {
+            toast.success("Collection deleted successfully!");
+            navigate("/collections");
+          },
+          onError: (error) => {
+            toast.error(`Error deleting collection: ${error.message}`);
+          },
+        },
+      ),
+        () => {
+          toast.info("Collection deletion canceled.");
+        });
+    });
+  };
+
+  const handleCollectionSnippetsFormToggle = () =>
+    setToggleCollectionSnippetsForm((prev) => !prev);
   const handleEditFormToggle = () => setToggleEditForm((prev) => !prev);
 
   const handleFormSubmit = (formData) => {
@@ -79,11 +112,20 @@ const CollectionDetails = () => {
         />
       )}
 
+      {toggleCollectionSnippetsForm && (
+        <ToggleCollectionSnippetsForm
+          collectionId={id}
+          CollectionData={data?.collection}
+          onCancel={handleCollectionSnippetsFormToggle}
+          refetchCollection={refetch}
+        />
+      )}
+
       {/* top back and edit buttons */}
       <div className={`flex items-center justify-between gap-2`}>
         <button
           onClick={() => navigate(-1)}
-          className={`mb-3 flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 font-semibold transition-all hover:scale-105 active:scale-95 ${
+          className={`flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 font-semibold transition-all hover:scale-105 active:scale-95 ${
             isDark
               ? "bg-primary-bg4 border-primary-bg3 hover:bg-primary-bg3 text-white"
               : "border-gray-300 bg-white text-gray-800 hover:bg-gray-50"
@@ -91,36 +133,55 @@ const CollectionDetails = () => {
         >
           <IoMdArrowBack /> Back
         </button>
-
-        <button
-          onClick={handleEditFormToggle}
-          className={`flex cursor-pointer items-center gap-1 rounded-full bg-amber-300 px-4 py-2 text-[15px] font-semibold text-amber-800 transition-all duration-200 hover:scale-105`}
-        >
-          <MdOutlineEdit className="text-lg" />
-          Edit
-        </button>
       </div>
 
       {/* collection details */}
       <div
-        className={`mb-2 flex flex-col gap-2 md:items-start md:justify-between`}
+        className={`mb-3 flex flex-col gap-2 rounded-lg p-4 md:flex-row md:items-center md:justify-between`}
       >
-        <h1
-          className={`text-2xl font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}
+        <div
+          className={`mb-2 flex flex-col gap-2 md:items-start md:justify-between`}
         >
-          {data?.collection?.name}
-        </h1>
+          <h1
+            className={`text-2xl font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}
+          >
+            {data?.collection?.name}
+          </h1>
 
-        <p
-          className={`font-mono text-lg ${isDark ? "text-primary-text" : "text-gray-800"}`}
-        >
-          {data?.collection?.description}
-        </p>
+          <p
+            className={`font-mono text-lg ${isDark ? "text-primary-text" : "text-gray-800"}`}
+          >
+            {data?.collection?.description}
+          </p>
 
-        <p className={`font-mono text-sm font-semibold text-teal-500`}>
-          {data?.collection?.createdAt &&
-            `${new Date(data.collection.createdAt).toLocaleString()}`}
-        </p>
+          <p className={`font-mono text-sm font-semibold text-teal-500`}>
+            {data?.collection?.createdAt &&
+              `${new Date(data.collection.createdAt).toLocaleString()}`}
+          </p>
+        </div>
+        <div className={`flex flex-col items-stretch gap-2`}>
+          <button
+            onClick={handleEditFormToggle}
+            className={`flex cursor-pointer items-center gap-1 rounded-full bg-amber-300 px-4 py-2 text-[15px] font-semibold text-amber-800 transition-all duration-200 hover:scale-105`}
+          >
+            <MdOutlineEdit className="text-lg" />
+            Edit
+          </button>
+          <button
+            onClick={handleDeleteFormToggle}
+            className={`flex cursor-pointer items-center gap-1 rounded-full bg-red-300 px-4 py-2 text-[15px] font-semibold text-red-800 transition-all duration-200 hover:scale-105`}
+          >
+            <RiDeleteBin5Line className="text-lg" />
+            Delete
+          </button>
+          <button
+            onClick={handleCollectionSnippetsFormToggle}
+            className={`flex cursor-pointer items-center gap-1 rounded-full bg-emerald-300 px-4 py-2 text-[15px] font-semibold text-emerald-800 transition-all duration-200 hover:scale-105`}
+          >
+            <AiOutlineSnippets className="text-lg" />
+            Manage Snippets
+          </button>
+        </div>
       </div>
 
       <h1 className="">

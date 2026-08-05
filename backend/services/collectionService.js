@@ -46,6 +46,14 @@ export const updateSnippetCollections = async (
   return await CollectionModel.find({ user: userId }).populate("snippets");
 };
 
+export const updateCollectionSnippets = async (collectionId, snippetIds) => {
+  return await CollectionModel.findByIdAndUpdate(
+    collectionId,
+    { snippets: snippetIds },
+    { new: true },
+  );
+};
+
 export const deleteCollection = async (id) => {
   return await CollectionModel.findByIdAndDelete(id);
 };

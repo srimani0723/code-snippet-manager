@@ -6,6 +6,7 @@ import {
   deleteCollectionController,
   getCollectionByIdController,
   updateSnippetCollectionController,
+  updateCollectionSnippetsController,
 } from "../controllers/collectionController.js";
 import { verifyToken } from "../middlewares/auth.js";
 
@@ -23,6 +24,12 @@ router.patch(
   "/sync/:snippetId",
   verifyToken,
   updateSnippetCollectionController,
+);
+
+router.put(
+  "/sync/:collectionId",
+  verifyToken,
+  updateCollectionSnippetsController,
 );
 
 export default router;
