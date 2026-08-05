@@ -8,6 +8,7 @@ import authRoute from "./routes/authRoute.js";
 import snippetRoute from "./routes/snippetRoute.js";
 import collectionRoute from "./routes/collectionRoute.js";
 import compilerRoute from "./routes/compilerRoute.js";
+import aiRoute from "./routes/aiRoute.js";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/snippets", snippetRoute);
 app.use("/api/collections", collectionRoute);
 app.use("/api/compiler", compilerRoute);
+app.use("/api/ai", aiRoute);
 
 connectDB();
 

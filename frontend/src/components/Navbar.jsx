@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const handleLogin = () => {
     navigate("/login");
-    toggleNavbar();
+    closeNavbar();
   };
 
   const handleLogout = () => {
@@ -76,7 +76,7 @@ const Navbar = () => {
     <header
       className={`border-box sticky top-0 z-100 flex w-full items-center justify-center px-4 py-2 backdrop-blur-md ${
         theme === themes.DARK
-          ? "bg-primary-bg2 border-b border-gray-600 "
+          ? "bg-primary-bg2/60 border-b border-gray-600 "
           : "border-b border-gray-300 bg-white/60 shadow-md/5"
       }`}
     >
@@ -131,7 +131,7 @@ const Navbar = () => {
 
             {isAuthenticated && !loading && (
               <NavLink to="/dashboard" className={"w-full md:w-fit"}>
-                <li className={linkClass("/dashboard")} onClick={toggleNavbar}>
+                <li className={linkClass("/dashboard")} onClick={closeNavbar}>
                   My Dashboard
                 </li>
               </NavLink>
@@ -139,10 +139,7 @@ const Navbar = () => {
 
             {isAuthenticated && !loading && (
               <NavLink to="/code-editor/new" className={"w-full md:w-fit"}>
-                <li
-                  className={linkClass("/code-editor")}
-                  onClick={toggleNavbar}
-                >
+                <li className={linkClass("/code-editor")} onClick={closeNavbar}>
                   Playground
                 </li>
               </NavLink>

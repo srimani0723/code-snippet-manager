@@ -92,7 +92,9 @@ const CollectionDetails = () => {
 
   if (isError) {
     return (
-      <p className="text-muted-foreground flex min-h-[90vh] items-center justify-center text-center font-mono text-lg font-semibold">
+      <p
+        className={`text-muted-foreground flex min-h-[90vh] items-center justify-center text-center font-mono text-lg font-semibold ${isDark ? "text-gray-400" : "text-gray-600"}`}
+      >
         {error?.response?.status === 401
           ? "Your session expired. Please log in again."
           : "Unable to load collection details right now."}

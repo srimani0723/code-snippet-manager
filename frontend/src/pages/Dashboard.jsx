@@ -23,7 +23,7 @@ const Dashboard = () => {
   return (
     <section className="relative mx-auto flex min-h-[90vh] w-full flex-col md:flex-row md:items-start">
       <aside
-        className={`sticky top-15 z-10 flex h-fit w-full flex-row gap-2 p-3 shadow-md/10 backdrop-blur-md md:h-[90vh] md:w-fit md:flex-col md:self-start ${isDark ? "bg-primary-bg2" : "bg-white/60"}`}
+        className={`sticky top-15 z-10 flex h-fit w-full flex-row gap-2 p-3 shadow-md/10 backdrop-blur-md md:h-[90vh] md:w-fit md:flex-col md:self-start ${isDark ? "bg-primary-bg2/60" : "bg-white/60"}`}
       >
         {tabs.map((tab) => (
           <NavLink
