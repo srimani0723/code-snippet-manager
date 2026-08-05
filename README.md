@@ -4,25 +4,32 @@ Save, share, and organize code snippets with a lightweight MERN app. This projec
 
 ## Screenshots
 
-Add screenshots under `/frontend/public/screenshots/` and update paths below.
-
-- Dashboard
+Added screenshots directly from the github by drag and drop.
 
 - Home
+<img width="1919" height="855" alt="Screenshot 2026-08-05 181654" src="https://github.com/user-attachments/assets/9bc2a3cd-f41a-4831-a496-46fa1f08d98c" />
+- Dashboard
+<img width="1919" height="855" alt="Screenshot 2026-08-05 181726" src="https://github.com/user-attachments/assets/f69c9c4d-568e-47e0-8825-ef2b22b09c23" />
 
 - Explore
-
+  
+<img width="1919" height="857" alt="Screenshot 2026-08-05 181849" src="https://github.com/user-attachments/assets/fc124873-1623-4dd1-9b30-b228ac80086e" />
 - Explore Snippet details
-
+<img width="1919" height="769" alt="Screenshot 2026-08-05 181910" src="https://github.com/user-attachments/assets/ecfbee0a-d296-4cf8-af70-07b497f65959" />
 - User Snippet details
+<img width="1919" height="855" alt="Screenshot 2026-08-05 181835" src="https://github.com/user-attachments/assets/e2c3b8aa-b4bd-4440-aa48-e5f566185111" />
 
 - Collections
+<img width="1919" height="857" alt="Screenshot 2026-08-05 181742" src="https://github.com/user-attachments/assets/01ae1ab4-b609-4049-ac83-383b129c7334" />
 
 - Collections Details
+<img width="1919" height="854" alt="Screenshot 2026-08-05 181804" src="https://github.com/user-attachments/assets/9d30d5d7-833d-4d2b-bc80-40470ad0c8ea" />
 
 - Editor
+<img width="1919" height="858" alt="Screenshot 2026-08-05 182001" src="https://github.com/user-attachments/assets/f3a30e49-1fb6-46e3-b895-5ee352c93030" />
 
 - AI explain result
+<img width="1918" height="857" alt="Screenshot 2026-08-05 182022" src="https://github.com/user-attachments/assets/094d41b0-4181-4d53-a812-d3502efaad47" />
 
 ## Features
 
