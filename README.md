@@ -1,69 +1,66 @@
 # Code Snippet Manager
 
-A MERN stack app for saving, organizing, browsing, and reusing code snippets. It supports private and public snippets, collections, search and filtering, snippet forking, and a browser-based editor for creating or editing code.
+Save, share, and organize code snippets with a lightweight MERN app. This project includes user authentication, snippet collections, a Monaco-based editor, sandboxed code execution, and AI-assisted snippet explanations.
+
+## Screenshots
+
+Add screenshots under `/frontend/public/screenshots/` and update paths below.
+
+- Dashboard
+
+- Home
+
+- Explore
+
+- Explore Snippet details
+
+- User Snippet details
+
+- Collections
+
+- Collections Details
+
+- Editor
+
+- AI explain result
 
 ## Features
 
-- Authentication with register, login, logout, and session verification.
-- Create, edit, delete, and view snippets.
-- Mark snippets as public or private.
-- Explore public snippets from other users and fork them into your own dashboard.
-- Organize snippets into collections and sync snippets between snippets and collections.
-- Search and filter snippets by title, language, description, or tags.
-- Monaco-based code editor for writing snippets in the browser.
-- Theme toggle for light and dark mode.
-- Backend code execution through a sandboxed compiler service using `vm2`.
+- Authentication: register, login, logout and session verification. Uses JWT stored in HTTP-only cookies and password hashing with `bcrypt`.
+- Snippet CRUD: create, edit, delete, and view snippets with metadata (title, language, description, tags). Snippets support multiple languages and syntax highlighting in the editor.
+- Public / Private snippets & Forking: mark snippets as public to share them in the Explore view; public snippets can be forked into a user's dashboard while private snippets remain owner-only.
+- Collections: group related snippets into collections, add or remove snippets from collections, and toggle synchronization between snippets and collections.
+- Search & Filters: full-text and field-based search by title, language, description or tags with client-side filters for easier discovery.
+- Monaco Editor: in-browser code editor with syntax highlighting and language modes powered by the Monaco editor component.
+- Theme Toggle: light/dark theme support with persistent preference (via `ThemeContext` / localStorage).
+- Server-side sandboxed execution: run JavaScript snippets in a secure sandbox (`vm2`) via the `/api/compiler/javascript` endpoint; returns execution output or errors.
+- AI-assisted explanations: send snippet code to the AI service (`/api/ai/explain`) to receive concise, human-readable explanations (requires `GEMINI_API_KEY`).
+- State & Networking: client uses React Query for server state and mutations, and Redux Toolkit for application-level state.
+- Security & Ops: HTTP-only cookies, CORS configuration for frontend origins, and environment-based configuration for production vs. development.
 
-## Tech Stack
+## What's new / notable features
 
-| Technology                                                                                                                                        | Purpose                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />                          | Database                              |
-| <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />                    | Backend API                           |
-| <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />                               | Frontend UI                           |
-| <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />                          | Runtime                               |
-| <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />                                   | Frontend dev server and build tooling |
-| <img src="https://img.shields.io/badge/Redux%20Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux Toolkit" />              | App state                             |
-| <img src="https://img.shields.io/badge/React%20Query-FF4154?style=for-the-badge&logo=tanstack&logoColor=white" alt="React Query" />               | Server state and mutations            |
-| <img src="https://img.shields.io/badge/Monaco%20Editor-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Monaco Editor" /> | In-browser code editing               |
-| <img src="https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />          | Styling                               |
-| <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT" />                            | Authentication                        |
+- AI code explanation: POST `/api/ai/explain` (authenticated) — sends snippet code to an AI service and returns a concise explanation.
+- Server-side JavaScript runner: POST `/api/compiler/javascript` — runs submitted JS in a sandbox and returns output.
+- Snippet forking and public/private visibility, collections, and Monaco editor integration.
 
-## Project Structure
+## Quick start
 
-- `backend/` contains the Express API, MongoDB models, controllers, services, and auth utilities.
-- `frontend/` contains the React app, pages, reusable components, hooks, and state management.
+Requirements
 
-## Prerequisites
+- Node 16+ and npm
+- MongoDB (local or hosted)
 
-- Node.js 16 or newer
-- MongoDB running locally or a hosted MongoDB connection string
-
-## Setup
-
-### Backend
+Run the backend
 
 ```bash
 cd backend
 npm install
-```
-
-Create a `.env` file in `backend/`:
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/code-snippet-manager
-JWT_SECRET=your_super_secret_key
-FRONTEND_URL=http://localhost:5173
-```
-
-Start the API:
-
-```bash
+# create .env (see example below)
 npm run dev
 ```
 
-### Frontend
+Run the frontend
 
 ```bash
 cd frontend
@@ -71,19 +68,52 @@ npm install
 npm run dev
 ```
 
-Open the app at [http://localhost:5173](http://localhost:5173).
+Open the app at: http://localhost:5173
 
-## API Overview
+## Environment example (`backend/.env`)
 
-The backend exposes these routes under `/api`:
+```env
+PORT=5000
+MONGODB_URL=mongodb://localhost:27017/code-snippet-manager
+JWT_SECRET=your_jwt_secret_here
+GEMINI_API_KEY=your_gemini_key_here
+FRONTEND_URL=http://localhost:5173
+FRONTEND_URL_V2=http://localhost:4173
+```
 
-- `/api/auth` for register, login, logout, and session check
-- `/api/snippets` for snippet CRUD and fork actions
-- `/api/collections` for collection CRUD and snippet-collection syncing
-- `/api/compiler` for running code in the backend sandbox
+Notes:
 
-## Notes
+- Backend reads `MONGODB_URL`, `PORT`, `GEMINI_API_KEY`, `FRONTEND_URL`, and `FRONTEND_URL_V2`.
+- The AI explain endpoint requires authentication (uses HTTP-only cookies + JWT).
 
-- Auth uses HTTP-only cookies and JWT.
-- Passwords are hashed with `bcrypt`.
-- Public snippets can be forked, but private snippets stay in the owner dashboard.
+## Main API routes
+
+- `/api/auth` — register, login, logout, verify session
+- `/api/snippets` — CRUD and fork snippets
+- `/api/collections` — CRUD collections and manage snippet membership
+- `/api/compiler/javascript` — POST JS code, returns execution output
+- `/api/ai/explain` — POST code, returns AI-generated explanation (authenticated)
+
+## Developer notes
+
+- Auth uses HTTP-only cookies and JWT tokens; passwords are hashed with `bcrypt`.
+- The compiler service is sandboxed using `vm2`; review `backend/services/compilerService.js` before enabling untrusted code in production.
+- AI calls use the Gemini client and require `GEMINI_API_KEY` in env.
+
+## Project structure
+
+- `backend/` — Express API, controllers, services, models, middlewares
+- `frontend/` — React app (Vite), pages, components, hooks, providers
+
+## Scripts
+
+- Backend: `npm run dev` (uses `nodemon`), `npm start` to run `node index.js`.
+- Frontend: `npm run dev` (Vite), `npm run build`, `npm run preview`.
+
+## Contributing
+
+- Fork, create a feature branch, and open a pull request. Include tests for significant features and keep changes scoped.
+
+---
+
+If you'd like, I can add screenshot files with suggested crops, or update the README to include example API requests and responses. Which would you prefer next?
